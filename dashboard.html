@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PhytoSentry Dashboard</title>
+
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="brand">
+                <img src="assets/images/logo.png" alt="PhytoSentry Logo">
+                <span>PhytoSentry</span>
+            </div>
+
+
+            <div class="profile">
+
+                <div class="profile-icon">
+                    <span class="profile-head"></span>
+                    <span class="profile-body"></span>
+                </div>
+
+                <strong>Admin User</strong>
+                <span>Administrator</span>
+
+            </div>
+
+
+            <nav class="sidebar-nav">
+
+                <button class="nav-item active" id="dashboardNav">
+                    <span class="nav-icon">⌂</span>
+                    <span>Dashboard</span>
+                </button>
+
+                <button class="nav-item" id="scanRecordsNav">
+                    <span class="nav-icon">▤</span>
+                    <span>Scan Records</span>
+                </button>
+
+            </nav>
+
+
+            <button class="logout-button" id="logoutButton">
+                <span class="nav-icon">↪</span>
+                <span>Logout</span>
+            </button>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <h1>DASHBOARD</h1>
+
+
+            <!-- SUMMARY CARDS -->
+            <section class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green-light">
+                        ♟
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span class="stat-title">
+                            Total Users
+                        </span>
+
+                        <strong class="stat-number">
+                            248
+                        </strong>
+
+                        <span class="stat-change">
+                            +12 this week
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green-light">
+                        ⌗
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span class="stat-title">
+                            Total Scans
+                        </span>
+
+                        <strong class="stat-number">
+                            1,235
+                        </strong>
+
+                        <span class="stat-change">
+                            +85 this week
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon orange-light">
+                        !
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span class="stat-title">
+                            Disease<br>Detections
+                        </span>
+
+                        <strong class="stat-number">
+                            342
+                        </strong>
+
+                        <span class="stat-change">
+                            +18 this week
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green-light">
+                        ♧
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span class="stat-title">
+                            Active Farms
+                        </span>
+
+                        <strong class="stat-number">
+                            36
+                        </strong>
+
+                        <span class="stat-change">
+                            +3 this week
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- RECENT SCANS -->
+            <section class="recent-scans">
+
+                <div class="section-header">
+                    Recent Scans
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Scan ID</th>
+                                <th>Disease Detected</th>
+                                <th>Confidence %</th>
+                                <th>Date/Time</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <tr
+                                class="record-row"
+                                data-scan-id="SCAN-000124"
+                            >
+                                <td>Juan</td>
+                                <td>Dela Cruz</td>
+                                <td>SCAN-000124</td>
+                                <td>Coffee Leaf Rust</td>
+                                <td>92.4%</td>
+                                <td>May 18, 2025 10:24 AM</td>
+                            </tr>
+
+
+                            <tr
+                                class="record-row"
+                                data-scan-id="SCAN-000123"
+                            >
+                                <td>Maria</td>
+                                <td>Santos</td>
+                                <td>SCAN-000123</td>
+                                <td>Cercospora Leaf Spot</td>
+                                <td>89.1%</td>
+                                <td>May 18, 2025 09:15 AM</td>
+                            </tr>
+
+
+                            <tr
+                                class="record-row"
+                                data-scan-id="SCAN-000122"
+                            >
+                                <td>Pedro</td>
+                                <td>Reyes</td>
+                                <td>SCAN-000122</td>
+                                <td>Coffee Berry Disease</td>
+                                <td>87.7%</td>
+                                <td>May 17, 2025 04:42 PM</td>
+                            </tr>
+
+
+                            <tr
+                                class="record-row"
+                                data-scan-id="SCAN-000121"
+                            >
+                                <td>Angela</td>
+                                <td>Garcia</td>
+                                <td>SCAN-000121</td>
+                                <td class="healthy">Healthy</td>
+                                <td>98.6%</td>
+                                <td>May 17, 2025 03:11 PM</td>
+                            </tr>
+
+
+                            <tr
+                                class="record-row"
+                                data-scan-id="SCAN-000120"
+                            >
+                                <td>Carlo</td>
+                                <td>Navarro</td>
+                                <td>SCAN-000120</td>
+                                <td>Coffee Leaf Rust</td>
+                                <td>91.3%</td>
+                                <td>May 17, 2025 11:08 AM</td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <button class="view-records" id="viewRecords">
+
+                    <span>View Full Scan Records</span>
+
+                    <span>→</span>
+
+                </button>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script src="js/dashboard.js"></script>
+
+</body>
+
+</html>

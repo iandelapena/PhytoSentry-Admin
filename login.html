@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PhytoSentry Admin Login</title>
+
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+
+    <main class="login-page">
+
+        <div class="login-container">
+
+            <!-- LEFT BRANDING SECTION -->
+            <section class="branding-section">
+
+                <!-- Faded leaf decoration -->
+                <img
+                    src="assets/images/leaf-decoration.png"
+                    alt=""
+                    class="leaf-decoration"
+                >
+
+                <!-- Branding content -->
+                <div class="branding-content">
+
+                    <img
+                        src="assets/images/logo.png"
+                        alt="PhytoSentry Logo"
+                        class="branding-logo"
+                    >
+
+                    <h2>PHYTOSENTRY</h2>
+
+                    <p>
+                        Scan. Detect. Protect Coffee Plants.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- RIGHT LOGIN SECTION -->
+            <section class="login-section">
+
+                <div class="login-card">
+
+                    <!-- Small logo -->
+                    <img
+                        src="assets/images/logo.png"
+                        alt="PhytoSentry Logo"
+                        class="login-logo"
+                    >
+
+
+                    <!-- LOGIN HEADER -->
+                    <div class="login-header">
+
+                        <h1>
+                            PhytoSentry Admin Login
+                        </h1>
+
+                        <p>
+                            Access the PhytoSentry<br>
+                            administration dashboard.
+                        </p>
+
+                    </div>
+
+
+                    <!-- LOGIN FORM -->
+                    <form id="loginForm">
+
+                        <!-- USERNAME -->
+                        <div class="form-group">
+
+                            <div class="input-wrapper">
+
+                                <!-- User icon -->
+                                <span class="input-icon">
+
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <path
+                                            d="M20 21a8 8 0 0 0-16 0"
+                                        ></path>
+
+                                        <circle
+                                            cx="12"
+                                            cy="7"
+                                            r="4"
+                                        ></circle>
+
+                                    </svg>
+
+                                </span>
+
+
+                                <!-- Username text -->
+                                <div class="input-text">
+
+                                    <label for="username">
+                                        Admin Username
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="username"
+                                        name="username"
+                                        placeholder="Enter admin username"
+                                        autocomplete="username"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- PASSWORD -->
+                        <div class="form-group">
+
+                            <div class="input-wrapper">
+
+                                <!-- Lock icon -->
+                                <span class="input-icon">
+
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+
+                                        <rect
+                                            x="3"
+                                            y="11"
+                                            width="18"
+                                            height="10"
+                                            rx="2"
+                                        ></rect>
+
+                                        <path
+                                            d="M7 11V7a5 5 0 0 1 10 0v4"
+                                        ></path>
+
+                                    </svg>
+
+                                </span>
+
+
+                                <!-- Password text -->
+                                <div class="input-text">
+
+                                    <label for="password">
+                                        Password
+                                    </label>
+
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        name="password"
+                                        placeholder="Enter password"
+                                        autocomplete="current-password"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <!-- Password toggle -->
+                                <button
+                                    type="button"
+                                    id="togglePassword"
+                                    class="password-toggle"
+                                    aria-label="Show password"
+                                >
+
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+
+                                        <path
+                                            d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
+                                        ></path>
+
+                                        <circle
+                                            cx="12"
+                                            cy="12"
+                                            r="3"
+                                        ></circle>
+
+                                    </svg>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- REMEMBER ME / FORGOT PASSWORD -->
+                        <div class="login-options">
+
+                            <label class="remember-me">
+
+                                <input
+                                    type="checkbox"
+                                    id="rememberMe"
+                                >
+
+                                <span class="custom-checkbox"></span>
+
+                                <span>
+                                    Remember Me
+                                </span>
+
+                            </label>
+
+
+                            <a
+                                href="#"
+                                id="forgotPassword"
+                            >
+                                Forgot Password?
+                            </a>
+
+                        </div>
+
+
+                        <!-- LOGIN BUTTON -->
+                        <button
+                            type="submit"
+                            class="login-button"
+                        >
+
+                            <span>
+                                Log in
+                            </span>
+
+                            <span class="arrow">
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <!-- LOGIN MESSAGE -->
+                        <p
+                            id="loginMessage"
+                            class="login-message"
+                        ></p>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- JavaScript -->
+    <script src="js/login.js"></script>
+
+</body>
+
+</html>

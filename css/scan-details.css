@@ -1,0 +1,614 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: #f0f0f0;
+
+    color: #202020;
+}
+
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+.dashboard {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+
+    background: #f0f0f0;
+}
+
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.sidebar {
+    width: 235px;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 25px 16px;
+
+    background: linear-gradient(
+        180deg,
+        #173a25 0%,
+        #0c2b19 100%
+    );
+
+    color: white;
+}
+
+
+/* =========================================
+   BRAND
+========================================= */
+
+.brand {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 30px;
+}
+
+
+.brand img {
+    width: 53px;
+    height: 53px;
+
+    object-fit: contain;
+}
+
+
+.brand span {
+    color: #ffffff;
+
+    font-size: 21px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   PROFILE
+========================================= */
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-bottom: 35px;
+}
+
+
+.profile-icon {
+    width: 68px;
+    height: 68px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 12px;
+
+    background: #f1f1f1;
+
+    border: 2px solid white;
+    border-radius: 50%;
+}
+
+
+.profile-head {
+    width: 22px;
+    height: 22px;
+
+    border-radius: 50%;
+
+    background: #252525;
+}
+
+
+.profile-body {
+    width: 38px;
+    height: 25px;
+
+    margin-top: 3px;
+
+    border-radius: 20px 20px 0 0;
+
+    background: #777777;
+}
+
+
+.profile strong {
+    margin-bottom: 7px;
+
+    color: #ffffff;
+
+    font-size: 15px;
+}
+
+
+.profile > span:last-child {
+    color: #d2d9d2;
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+.sidebar-nav {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.nav-item,
+.logout-button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 17px;
+
+    padding: 15px 18px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    text-align: left;
+
+    cursor: pointer;
+}
+
+
+.nav-item:hover,
+.nav-item.active {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+
+.nav-icon {
+    width: 25px;
+
+    font-size: 21px;
+
+    text-align: center;
+}
+
+
+.logout-button {
+    margin-top: auto;
+}
+
+
+.logout-button:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.main-content {
+    flex: 1;
+
+    min-width: 0;
+
+    min-height: 100vh;
+
+    padding: 32px 30px;
+
+    background: #f0f0f0;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================
+   PAGE HEADER
+========================================= */
+
+.page-header {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+
+.page-header h1 {
+    color: #151515;
+
+    font-size: 25px;
+    font-weight: 700;
+}
+
+
+.back-button {
+    width: 48px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #234c2d;
+
+    font-size: 29px;
+
+    cursor: pointer;
+}
+
+
+.back-button:hover {
+    background: #f8f8f8;
+}
+
+
+/* =========================================
+   DETAILS CONTENT
+========================================= */
+
+.details-content {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-start;
+
+    gap: 37px;
+}
+
+
+/* =========================================
+   SCAN IMAGE
+========================================= */
+
+.scan-image-container {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 548px;
+
+    overflow: hidden;
+
+    border-radius: 9px;
+
+    background: #dddddd;
+}
+
+
+.scan-image-container img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+/* =========================================
+   DETAILS PANEL
+========================================= */
+
+.details-panel {
+    width: 330px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 37px;
+
+    margin-top: 21px;
+
+    margin-right: 15px;
+}
+
+
+/* =========================================
+   DETAIL SECTION
+========================================= */
+
+.detail-section {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+.detail-section h2 {
+    margin-bottom: 29px;
+
+    color: #234c2d;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   DETAIL ROW
+========================================= */
+
+.detail-row {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 18px;
+
+    gap: 15px;
+}
+
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+
+.detail-label {
+    flex-shrink: 0;
+
+    color: #333333;
+
+    font-size: 13px;
+}
+
+
+.detail-value {
+    margin-left: auto;
+
+    color: #202020;
+
+    font-size: 13px;
+
+    text-align: right;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.status {
+    margin-left: auto;
+
+    display: inline-flex;
+    align-items: center;
+
+    padding: 9px 12px;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+}
+
+
+.status.completed {
+    background: #edf7ed;
+
+    color: #333333;
+}
+
+
+/* =========================================
+   SEVERITY
+========================================= */
+
+.severity {
+    margin-left: auto;
+
+    display: inline-flex;
+    align-items: center;
+
+    padding: 8px 13px;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.severity.high {
+    background: #ffe7e7;
+
+    color: #333333;
+}
+
+
+.severity.medium {
+    background: #fff0d6;
+
+    color: #333333;
+}
+
+
+.severity.low {
+    background: #edf7ed;
+
+    color: #43832c;
+}
+
+
+/* =========================================
+   FARM DETAILS
+========================================= */
+
+.farm-section {
+    margin-left: 1px;
+}
+
+
+.farm-section .detail-row {
+    justify-content: space-between;
+}
+
+
+.farm-section .detail-value {
+    margin-left: 0;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .sidebar {
+        width: 210px;
+    }
+
+    .main-content {
+        padding: 28px 22px;
+    }
+
+    .details-content {
+        gap: 25px;
+    }
+
+    .details-panel {
+        width: 300px;
+        margin-right: 0;
+    }
+}
+
+
+@media (max-width: 850px) {
+
+    .details-content {
+        flex-direction: column;
+    }
+
+    .scan-image-container {
+        width: 100%;
+        height: 450px;
+    }
+
+    .details-panel {
+        width: 100%;
+
+        margin-top: 0;
+        margin-bottom: 25px;
+    }
+}
+
+
+@media (max-width: 750px) {
+
+    .dashboard {
+        flex-direction: column;
+    }
+
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+
+        padding: 15px 18px;
+    }
+
+
+    .brand {
+        justify-content: center;
+
+        margin-bottom: 15px;
+    }
+
+
+    .profile {
+        display: none;
+    }
+
+
+    .sidebar-nav {
+        flex-direction: row;
+    }
+
+
+    .nav-item {
+        justify-content: center;
+    }
+
+
+    .logout-button {
+        width: auto;
+
+        margin-top: 10px;
+    }
+
+
+    .main-content {
+        padding: 25px 18px;
+    }
+
+
+    .page-header {
+        margin-bottom: 20px;
+    }
+
+
+    .scan-image-container {
+        height: 350px;
+    }
+
+
+    .detail-row {
+        justify-content: space-between;
+    }
+
+}
