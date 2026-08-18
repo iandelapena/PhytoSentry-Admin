@@ -33,8 +33,8 @@ const diseaseFilter =
 const downloadButton =
     document.getElementById("downloadButton");
 
-const recordRows =
-    document.querySelectorAll(".record-row");
+const recordsBody =
+    document.getElementById("recordsTableBody");
 
 const noResults =
     document.getElementById("noResults");
@@ -171,7 +171,9 @@ function filterRecords() {
     let visibleRecords = 0;
 
 
-    recordRows.forEach((row) => {
+    document
+    .querySelectorAll(".record-row")
+    .forEach((row) => {
 
         // =====================================
         // GET RECORD DATA
@@ -184,6 +186,11 @@ function filterRecords() {
 
         const lastName =
             (row.dataset.lastName || "")
+                .toLowerCase();
+
+
+        const farmName =
+            (row.dataset.farmName || "")
                 .toLowerCase();
 
 
@@ -227,6 +234,8 @@ function filterRecords() {
             lastName.includes(searchValue) ||
 
             fullName.includes(searchValue) ||
+
+            farmName.includes(searchValue) ||
 
             scanId.includes(searchValue) ||
 
@@ -307,38 +316,6 @@ function filterRecords() {
 
 }
 
-
-// =========================================
-// CLICK RECORD → SCAN DETAILS
-// =========================================
-
-recordRows.forEach((row) => {
-
-    row.addEventListener("click", () => {
-
-        const scanId =
-            row.dataset.scanId;
-
-
-        // Save selected scan ID
-        // so scan-details.html can read it
-
-        localStorage.setItem(
-            "selectedScanId",
-            scanId
-        );
-
-
-        // Open scan details page
-
-        window.location.href =
-            "scan-details.html";
-
-    });
-
-});
-
-
 // =========================================
 // DOWNLOAD REPORT
 // =========================================
@@ -346,7 +323,9 @@ recordRows.forEach((row) => {
 downloadButton.addEventListener("click", () => {
 
     const rows =
-        Array.from(recordRows)
+    Array.from(
+        document.querySelectorAll(".record-row")
+    )
             .filter(row =>
                 row.style.display !== "none"
             );
@@ -368,7 +347,7 @@ downloadButton.addEventListener("click", () => {
     // =====================================
 
     let csv =
-        "First Name,Last Name,Scan ID,Disease Detected,Confidence %,Date/Time,Status\n";
+    "First Name,Last Name,Farm Name,Scan ID,Disease Detected,Confidence %,Date/Time,Status\n";
 
 
     // =====================================
@@ -377,42 +356,46 @@ downloadButton.addEventListener("click", () => {
 
     rows.forEach((row) => {
 
-        const cells =
-            row.querySelectorAll("td");
+    const cells =
+        row.querySelectorAll("td");
 
 
-        const firstName =
-            cells[0].textContent.trim();
+    const firstName =
+        cells[0].textContent.trim();
 
 
-        const lastName =
-            cells[1].textContent.trim();
+    const lastName =
+        cells[1].textContent.trim();
 
 
-        const scanId =
-            cells[2].textContent.trim();
+    const farmName =
+        cells[2].textContent.trim();
 
 
-        const disease =
-            cells[3].textContent.trim();
+    const scanId =
+        cells[3].textContent.trim();
 
 
-        const confidence =
-            cells[4].textContent.trim();
+    const disease =
+        cells[4].textContent.trim();
 
 
-        const dateTime =
-            cells[5].textContent.trim();
+    const confidence =
+        cells[5].textContent.trim();
 
 
-        const status =
-            cells[6].textContent.trim();
+    const dateTime =
+        cells[6].textContent.trim();
 
 
-        csv +=
-            `"${firstName}","${lastName}","${scanId}","${disease}","${confidence}","${dateTime}","${status}"\n`;
+    const status =
+        cells[7].textContent.trim();
 
-    });
+
+    csv +=
+        `"${firstName}","${lastName}","${farmName}","${scanId}","${disease}","${confidence}","${dateTime}","${status}"\n`;
+
+});
 
 
     // =====================================
@@ -456,11 +439,13 @@ downloadButton.addEventListener("click", () => {
 
     URL.revokeObjectURL(url);
 
-});// =========================================
-// FIREBASE CONNECTION TEST
+});
+
+// =========================================
+// FIREBASE - LOAD SCAN RECORDS
 // =========================================
 
-async function testFirebaseConnection() {
+async function loadScanRecords() {
 
     try {
 
@@ -479,15 +464,203 @@ async function testFirebaseConnection() {
         );
 
 
+        // Clear existing table rows
+
+        recordsBody.innerHTML = "";
+
+
+        // =====================================
+        // CREATE TABLE ROWS
+        // =====================================
+
         snapshot.forEach((doc) => {
 
+            const data = doc.data();
+
             console.log(
-                "Scan ID:",
+                "Loading scan:",
                 doc.id,
-                doc.data()
+                data
             );
 
+
+            // ---------------------------------
+            // GET FIREBASE DATA
+            // ---------------------------------
+
+            const firstName =
+                data.firstName || "—";
+
+
+            const lastName =
+                data.LastName ||
+                data.lastName ||
+                "—";
+
+            const farmName =
+            data.farmName ||
+            data.FarmName ||
+            "—";
+
+            const scanId =
+                data.id ||
+                doc.id;
+
+
+            const disease =
+                data.displayName ||
+                data.scientificName ||
+                data.prediction?.label ||
+                "Unknown";
+
+
+            const confidence =
+                Number(
+                    data.prediction?.confidence || 0
+                );
+
+
+            const capturedDate =
+                data.capturedDate ||
+                "—";
+
+
+            const capturedTime =
+                data.capturedTime ||
+                "";
+
+
+            // ---------------------------------
+            // CREATE ROW
+            // ---------------------------------
+
+            const row =
+                document.createElement("tr");
+
+
+            row.classList.add(
+                "record-row"
+            );
+
+
+            // ---------------------------------
+            // DATA ATTRIBUTES
+            // ---------------------------------
+
+            row.dataset.firstName =
+                firstName;
+
+            row.dataset.lastName =
+                lastName;
+
+            row.dataset.scanId =
+                scanId;
+            
+            row.dataset.farmName =
+                farmName;
+
+            row.dataset.disease =
+                disease;
+
+            row.dataset.confidence =
+                confidence;
+
+            row.dataset.date =
+                data.capturedAt
+                    ? data.capturedAt.split("T")[0]
+                    : "";
+
+
+            row.dataset.datetime =
+                `${capturedDate} ${capturedTime}`.trim();
+
+
+            // ---------------------------------
+            // TABLE CONTENT
+            // ---------------------------------
+
+            row.innerHTML = `
+
+                <td>
+                    ${firstName}
+                </td>
+
+                <td>
+                    ${lastName}
+                </td>
+
+                <td>
+                    ${farmName}
+                </td>
+
+                <td>
+                    ${scanId}
+                </td>
+
+                <td class="${
+                    disease.toLowerCase() === "healthy"
+                        ? "healthy"
+                        : ""
+                }">
+                    ${disease}
+                </td>
+
+                <td>
+                    ${(confidence * 100).toFixed(1)}%
+                </td>
+
+                <td>
+                    ${capturedDate} ${capturedTime}
+                </td>
+
+                <td>
+                    <span class="status completed">
+                        Completed
+                    </span>
+                </td>
+
+            `;
+
+
+            // ---------------------------------
+            // CLICK RECORD
+            // ---------------------------------
+
+            row.addEventListener(
+                "click",
+                () => {
+
+                    localStorage.setItem(
+                        "selectedScanId",
+                        scanId
+                    );
+
+                    window.location.href =
+                        "scan-details.html";
+
+                }
+            );
+
+
+            // ---------------------------------
+            // ADD ROW TO TABLE
+            // ---------------------------------
+
+            recordsBody.appendChild(row);
+
         });
+
+
+        console.log(
+            "Firebase records displayed:",
+            snapshot.size
+        );
+
+
+        // Apply current filters
+
+        filterRecords();
+
 
     } catch (error) {
 
@@ -500,4 +673,9 @@ async function testFirebaseConnection() {
 
 }
 
-testFirebaseConnection();
+
+// =========================================
+// START FIREBASE LOADING
+// =========================================
+
+loadScanRecords();

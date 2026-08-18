@@ -22,7 +22,6 @@
                 <span>PhytoSentry</span>
             </div>
 
-
             <div class="profile">
 
                 <div class="profile-icon">
@@ -34,7 +33,6 @@
                 <span>Administrator</span>
 
             </div>
-
 
             <nav class="sidebar-nav">
 
@@ -50,7 +48,6 @@
 
             </nav>
 
-
             <button class="logout-button" id="logoutButton">
                 <span class="nav-icon">↪</span>
                 <span>Logout</span>
@@ -61,7 +58,6 @@
 
         <!-- MAIN CONTENT -->
         <main class="main-content">
-
 
             <!-- TOP BAR -->
             <div class="top-bar">
@@ -78,7 +74,6 @@
                     <span class="search-icon">⌕</span>
 
                 </div>
-
 
                 <button
                     class="download-button"
@@ -99,7 +94,6 @@
 
             <!-- FILTERS -->
             <div class="filters">
-
 
                 <!-- DATE RANGE -->
                 <div class="filter-group">
@@ -140,29 +134,33 @@
 
                     <select id="diseaseFilter">
 
-                        <option value="all">
-                            All Diseases
-                        </option>
+                            <option value="all">
+                                All Diseases
+                            </option>
 
-                        <option value="coffee leaf rust">
-                            Coffee Leaf Rust
-                        </option>
+                            <option value="brown eye spot">
+                                Brown Eye Spot
+                            </option>
 
-                        <option value="cercospora leaf spot">
-                            Cercospora Leaf Spot
-                        </option>
+                            <option value="anthracnose">
+                                Anthracnose
+                            </option>
 
-                        <option value="coffee berry disease">
-                            Coffee Berry Disease
-                        </option>
+                            <option value="cercospora leaf spot">
+                                Cercospora Leaf Spot
+                            </option>
 
-                        <option value="anthracnose">
-                            Anthracnose
-                        </option>
+                            <option value="coffee berry disease">
+                                Coffee Berry Disease
+                            </option>
 
-                        <option value="healthy">
-                            Healthy
-                        </option>
+                            <option value="coffee leaf rust">
+                                Coffee Leaf Rust
+                            </option>
+
+                            <option value="healthy leaf">
+                                Healthy Leaf
+                            </option>
 
                     </select>
 
@@ -181,250 +179,31 @@
                         <thead>
 
                             <tr>
-
                                 <th>First Name</th>
                                 <th>Last Name</th>
+                                <th>Farm Name</th>
                                 <th>Scan ID</th>
                                 <th>Disease Detected</th>
                                 <th>Confidence %</th>
                                 <th>Date/Time</th>
                                 <th>Status</th>
-
                             </tr>
 
                         </thead>
 
+                        <!-- FIREBASE RECORDS GO HERE -->
+                        <tbody id="recordsTableBody">
+                    <!-- Records will be dynamically inserted here -->
+                </tbody>
 
-                        <tbody id="recordsBody">
+                </table>
 
-
-                            <tr
-                                class="record-row"
-                                data-first-name="Juan"
-                                data-last-name="Dela Cruz"
-                                data-scan-id="SCAN-000124"
-                                data-disease="Coffee Leaf Rust"
-                                data-confidence="92.4"
-                                data-date="2025-05-18"
-                                data-datetime="May 18, 2025 10:24 AM"
-                            >
-
-                                <td>Juan</td>
-                                <td>Dela Cruz</td>
-                                <td>SCAN-000124</td>
-                                <td>Coffee Leaf Rust</td>
-                                <td>92.4%</td>
-                                <td>May 18, 2025 10:24 AM</td>
-
-                                <td>
-                                    <span class="status completed">
-                                        Completed
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr
-                                class="record-row"
-                                data-first-name="Maria"
-                                data-last-name="Santos"
-                                data-scan-id="SCAN-000123"
-                                data-disease="Cercospora Leaf Spot"
-                                data-confidence="89.1"
-                                data-date="2025-05-18"
-                                data-datetime="May 18, 2025 09:15 AM"
-                            >
-
-                                <td>Maria</td>
-                                <td>Santos</td>
-                                <td>SCAN-000123</td>
-                                <td>Cercospora Leaf Spot</td>
-                                <td>89.1%</td>
-                                <td>May 18, 2025 09:15 AM</td>
-
-                                <td>
-                                    <span class="status completed">
-                                        Completed
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr
-                                class="record-row"
-                                data-first-name="Carlos"
-                                data-last-name="Reyes"
-                                data-scan-id="SCAN-000122"
-                                data-disease="Coffee Berry Disease"
-                                data-confidence="87.7"
-                                data-date="2025-05-17"
-                                data-datetime="May 17, 2025 04:42 PM"
-                            >
-
-                                <td>Carlos</td>
-                                <td>Reyes</td>
-                                <td>SCAN-000122</td>
-                                <td>Coffee Berry Disease</td>
-                                <td>87.7%</td>
-                                <td>May 17, 2025 04:42 PM</td>
-
-                                <td>
-                                    <span class="status completed">
-                                        Completed
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr
-                                class="record-row"
-                                data-first-name="Ana"
-                                data-last-name="Garcia"
-                                data-scan-id="SCAN-000121"
-                                data-disease="Healthy"
-                                data-confidence="98.6"
-                                data-date="2025-05-17"
-                                data-datetime="May 17, 2025 03:11 PM"
-                            >
-
-                                <td>Ana</td>
-                                <td>Garcia</td>
-                                <td>SCAN-000121</td>
-                                <td class="healthy">Healthy</td>
-                                <td>98.6%</td>
-                                <td>May 17, 2025 03:11 PM</td>
-
-                                <td>
-                                    <span class="status completed">
-                                        Completed
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr
-                                class="record-row"
-                                data-first-name="Mark"
-                                data-last-name="Villanueva"
-                                data-scan-id="SCAN-000120"
-                                data-disease="Coffee Leaf Rust"
-                                data-confidence="91.3"
-                                data-date="2025-05-17"
-                                data-datetime="May 17, 2025 11:08 AM"
-                            >
-
-                                <td>Mark</td>
-                                <td>Villanueva</td>
-                                <td>SCAN-000120</td>
-                                <td>Coffee Leaf Rust</td>
-                                <td>91.3%</td>
-                                <td>May 17, 2025 11:08 AM</td>
-
-                                <td>
-                                    <span class="status completed">
-                                        Completed
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr
-                                class="record-row"
-                                data-first-name="Sofia"
-                                data-last-name="Mendoza"
-                                data-scan-id="SCAN-000119"
-                                data-disease="Anthracnose"
-                                data-confidence="84.2"
-                                data-date="2025-05-16"
-                                data-datetime="May 16, 2025 04:35 PM"
-                            >
-
-                                <td>Sofia</td>
-                                <td>Mendoza</td>
-                                <td>SCAN-000119</td>
-                                <td>Anthracnose</td>
-                                <td>84.2%</td>
-                                <td>May 16, 2025 04:35 PM</td>
-
-                                <td>
-                                    <span class="status completed">
-                                        Completed
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr
-                                class="record-row"
-                                data-first-name="Daniel"
-                                data-last-name="Ramos"
-                                data-scan-id="SCAN-000118"
-                                data-disease="Healthy"
-                                data-confidence="97.2"
-                                data-date="2025-05-16"
-                                data-datetime="May 16, 2025 02:22 PM"
-                            >
-
-                                <td>Daniel</td>
-                                <td>Ramos</td>
-                                <td>SCAN-000118</td>
-                                <td class="healthy">Healthy</td>
-                                <td>97.2%</td>
-                                <td>May 16, 2025 02:22 PM</td>
-
-                                <td>
-                                    <span class="status completed">
-                                        Completed
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr
-                                class="record-row"
-                                data-first-name="Patricia"
-                                data-last-name="Navarro"
-                                data-scan-id="SCAN-000117"
-                                data-disease="Coffee Leaf Rust"
-                                data-confidence="90.5"
-                                data-date="2025-05-16"
-                                data-datetime="May 16, 2025 09:47 AM"
-                            >
-
-                                <td>Patricia</td>
-                                <td>Navarro</td>
-                                <td>SCAN-000117</td>
-                                <td>Coffee Leaf Rust</td>
-                                <td>90.5%</td>
-                                <td>May 16, 2025 09:47 AM</td>
-
-                                <td>
-                                    <span class="status completed">
-                                        Completed
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                        </tbody>
-
-                    </table>
-
-
-                    <div
-                        class="no-results"
-                        id="noResults"
-                    >
-                        No scan records found.
-                    </div>
+                <div
+                    class="no-results"
+                    id="noResults"
+                >
+                    No scan records found.
+                </div>
 
                 </div>
 
@@ -435,7 +214,11 @@
     </div>
 
 
-    <script type="module" src="js/scan-records.js"></script>
+    <!-- JAVASCRIPT -->
+    <script
+        type="module"
+        src="js/scan-records.js"
+    ></script>
 
 </body>
 
