@@ -1,3 +1,10 @@
+import { db } from "./firebase.js";
+import {
+    collection,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+console.log("SCAN RECORDS JS LOADED");
 // =========================================
 // ELEMENTS
 // =========================================
@@ -23,8 +30,8 @@ const endDate =
 const diseaseFilter =
     document.getElementById("diseaseFilter");
 
-const downloadReport =
-    document.getElementById("downloadReport");
+const downloadButton =
+    document.getElementById("downloadButton");
 
 const recordRows =
     document.querySelectorAll(".record-row");
@@ -336,7 +343,7 @@ recordRows.forEach((row) => {
 // DOWNLOAD REPORT
 // =========================================
 
-downloadReport.addEventListener("click", () => {
+downloadButton.addEventListener("click", () => {
 
     const rows =
         Array.from(recordRows)
@@ -449,4 +456,48 @@ downloadReport.addEventListener("click", () => {
 
     URL.revokeObjectURL(url);
 
-});
+});// =========================================
+// FIREBASE CONNECTION TEST
+// =========================================
+
+async function testFirebaseConnection() {
+
+    try {
+
+        const snapshot =
+            await getDocs(
+                collection(db, "scanHistory")
+            );
+
+        console.log(
+            "Firebase connected successfully!"
+        );
+
+        console.log(
+            "Scan records found:",
+            snapshot.size
+        );
+
+
+        snapshot.forEach((doc) => {
+
+            console.log(
+                "Scan ID:",
+                doc.id,
+                doc.data()
+            );
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Firebase connection failed:",
+            error
+        );
+
+    }
+
+}
+
+testFirebaseConnection();
