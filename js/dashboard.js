@@ -1,3 +1,11 @@
+import { db } from "./firebase.js";
+
+import {
+    collection,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
 // =========================================
 // ELEMENTS
 // =========================================
@@ -14,12 +22,24 @@ const logoutButton =
 const viewRecords =
     document.getElementById("viewRecords");
 
-const recordRows =
-    document.querySelectorAll(".record-row");
+const totalUsers =
+    document.getElementById("totalUsers");
+
+const totalScans =
+    document.getElementById("totalScans");
+
+const diseaseDetections =
+    document.getElementById("diseaseDetections");
+
+const activeFarms =
+    document.getElementById("activeFarms");
+
+const recentScansBody =
+    document.getElementById("recentScansBody");
 
 
 // =========================================
-// DASHBOARD NAVIGATION
+// NAVIGATION
 // =========================================
 
 dashboardNav.addEventListener("click", () => {
@@ -30,10 +50,6 @@ dashboardNav.addEventListener("click", () => {
 });
 
 
-// =========================================
-// SCAN RECORDS NAVIGATION
-// =========================================
-
 scanRecordsNav.addEventListener("click", () => {
 
     window.location.href =
@@ -41,10 +57,6 @@ scanRecordsNav.addEventListener("click", () => {
 
 });
 
-
-// =========================================
-// VIEW FULL SCAN RECORDS
-// =========================================
 
 viewRecords.addEventListener("click", () => {
 
@@ -54,66 +66,21 @@ viewRecords.addEventListener("click", () => {
 });
 
 
-// =========================================
-// CLICK RECORD → SCAN DETAILS
-// =========================================
-
-recordRows.forEach((row) => {
-
-    row.addEventListener("click", () => {
-
-        const scanId =
-            row.dataset.scanId;
-
-
-        // Save selected scan ID
-        // so scan-details.html can read it
-
-        localStorage.setItem(
-            "selectedScanId",
-            scanId
-        );
-
-
-        // Open scan details page
-
-        window.location.href =
-            "scan-details.html";
-
-    });
-
-});
-
-
-// =========================================
-// LOGOUT
-// =========================================
-
 logoutButton.addEventListener("click", () => {
 
-    const confirmLogout =
+    if (
         confirm(
             "Are you sure you want to logout?"
-        );
-
-
-    if (confirmLogout) {
-
-        // Remove admin login data
+        )
+    ) {
 
         localStorage.removeItem(
             "phytosentryAdminUsername"
         );
 
-
-        // Remove selected scan data
-
         localStorage.removeItem(
             "selectedScanId"
         );
-
-
-        // Go to login page
 
         window.location.href =
             "login.html";
@@ -121,3 +88,373 @@ logoutButton.addEventListener("click", () => {
     }
 
 });
+
+
+// =========================================
+// LOAD DASHBOARD DATA
+// =========================================
+
+async function loadDashboardData() {
+
+    try {
+
+        // =====================================
+        // GET USERS
+        // =====================================
+
+        const usersSnapshot =
+            await getDocs(
+                collection(db, "users")
+            );
+
+
+        // =====================================
+        // GET SCAN RECORDS
+        // =====================================
+
+        const scansSnapshot =
+            await getDocs(
+                collection(db, "scanHistory")
+            );
+
+
+        console.log(
+            "Dashboard Firebase connected!"
+        );
+
+        console.log(
+            "Users found:",
+            usersSnapshot.size
+        );
+
+        console.log(
+            "Scan records found:",
+            scansSnapshot.size
+        );
+
+
+        // =====================================
+        // DISEASE + FARM COUNTS
+        // =====================================
+
+        let diseaseCount = 0;
+
+        const farms =
+            new Set();
+
+
+        scansSnapshot.forEach((doc) => {
+
+            const data =
+                doc.data();
+
+
+            // ---------------------------------
+            // GET DISEASE
+            // Same logic as scan-records.js
+            // ---------------------------------
+
+            const disease =
+                data.displayName ||
+                data.scientificName ||
+                data.prediction?.label ||
+                "Unknown";
+
+
+            // ---------------------------------
+            // COUNT DISEASES
+            // ---------------------------------
+
+            if (
+                disease.toLowerCase() !==
+                "healthy leaf"
+            ) {
+
+                diseaseCount++;
+
+            }
+
+
+            // ---------------------------------
+            // COUNT FARMS
+            // ---------------------------------
+
+            const farmName =
+                data.farmName ||
+                data.FarmName ||
+                "";
+
+
+            if (farmName) {
+
+                farms.add(farmName);
+
+            }
+
+        });
+
+
+        // =====================================
+        // UPDATE SUMMARY CARDS
+        // =====================================
+
+        totalUsers.textContent =
+            usersSnapshot.size;
+
+        totalScans.textContent =
+            scansSnapshot.size;
+
+        diseaseDetections.textContent =
+            diseaseCount;
+
+        activeFarms.textContent =
+            farms.size;
+
+
+        // =====================================
+        // CLEAR TABLE
+        // =====================================
+
+        recentScansBody.innerHTML = "";
+
+
+        // =====================================
+        // SORT SCANS BY DATE
+        // NEWEST FIRST
+        // =====================================
+
+        const scans =
+            scansSnapshot.docs
+                .map((doc) => {
+
+                    return {
+                        id: doc.id,
+                        data: doc.data()
+                    };
+
+                })
+                .sort((a, b) => {
+
+                    const dateA =
+                        a.data.capturedAt || "";
+
+                    const dateB =
+                        b.data.capturedAt || "";
+
+                    return dateB.localeCompare(
+                        dateA
+                    );
+
+                });
+
+
+        // =====================================
+        // GET FIVE MOST RECENT
+        // =====================================
+
+        const recentScans =
+            scans.slice(0, 5);
+
+
+        // =====================================
+        // CREATE TABLE ROWS
+        // =====================================
+
+        recentScans.forEach((scan) => {
+
+            const data =
+                scan.data;
+
+
+            // ---------------------------------
+            // GET RECORD DATA
+            // Same logic as scan-records.js
+            // ---------------------------------
+
+            const firstName =
+                data.firstName ||
+                "—";
+
+
+            const lastName =
+                data.LastName ||
+                data.lastName ||
+                "—";
+
+
+            const farmName =
+                data.farmName ||
+                data.FarmName ||
+                "—";
+
+
+            const scanId =
+                data.id ||
+                scan.id;
+
+
+            const disease =
+                data.displayName ||
+                data.scientificName ||
+                data.prediction?.label ||
+                "Unknown";
+
+
+            const confidence =
+                Number(
+                    data.prediction?.confidence ||
+                    0
+                );
+
+
+            const capturedDate =
+                data.capturedDate ||
+                "—";
+
+
+            const capturedTime =
+                data.capturedTime ||
+                "";
+
+
+            // ---------------------------------
+            // CREATE ROW
+            // ---------------------------------
+
+            const row =
+                document.createElement("tr");
+
+
+            row.classList.add(
+                "record-row"
+            );
+
+
+            // ---------------------------------
+            // TABLE CONTENT
+            // ---------------------------------
+
+            row.innerHTML = `
+
+                <td>
+                    ${firstName}
+                </td>
+
+                <td>
+                    ${lastName}
+                </td>
+
+                <td>
+                    ${farmName}
+                </td>
+
+                <td>
+                    ${scanId}
+                </td>
+
+                <td class="${
+                    disease.toLowerCase() ===
+                    "healthy leaf"
+                        ? "healthy"
+                        : ""
+                }">
+                    ${disease}
+                </td>
+
+                <td>
+                    ${(confidence * 100).toFixed(1)}%
+                </td>
+
+                <td>
+                    ${capturedDate}
+                    ${capturedTime}
+                </td>
+
+                <td>
+                    <span class="status completed">
+                        Completed
+                    </span>
+                </td>
+
+            `;
+
+
+            // ---------------------------------
+            // CLICK ROW
+            // ---------------------------------
+
+            row.addEventListener(
+                "click",
+                () => {
+
+                    localStorage.setItem(
+                        "selectedScanId",
+                        scanId
+                    );
+
+
+                    window.location.href =
+                        "scan-details.html";
+
+                }
+            );
+
+
+            // ---------------------------------
+            // ADD ROW
+            // ---------------------------------
+
+            recentScansBody.appendChild(
+                row
+            );
+
+        });
+
+
+        // =====================================
+        // SUCCESS
+        // =====================================
+
+        console.log(
+            "Dashboard loaded successfully!"
+        );
+
+        console.log(
+            "Total users:",
+            usersSnapshot.size
+        );
+
+        console.log(
+            "Total scans:",
+            scansSnapshot.size
+        );
+
+        console.log(
+            "Disease detections:",
+            diseaseCount
+        );
+
+        console.log(
+            "Active farms:",
+            farms.size
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Dashboard Firebase error:",
+            error
+        );
+
+    }
+
+}
+
+
+// =========================================
+// START
+// =========================================
+
+loadDashboardData();

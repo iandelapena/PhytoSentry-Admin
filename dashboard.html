@@ -80,8 +80,8 @@
                             Total Users
                         </span>
 
-                        <strong class="stat-number">
-                            248
+                        <strong class="stat-number" id="totalUsers">
+                            0
                         </strong>
 
                         <span class="stat-change">
@@ -105,8 +105,8 @@
                             Total Scans
                         </span>
 
-                        <strong class="stat-number">
-                            1,235
+                        <strong class="stat-number" id="totalScans">
+                            0
                         </strong>
 
                         <span class="stat-change">
@@ -130,10 +130,9 @@
                             Disease<br>Detections
                         </span>
 
-                        <strong class="stat-number">
-                            342
+                        <strong class="stat-number" id="diseaseDetections">
+                            0
                         </strong>
-
                         <span class="stat-change">
                             +18 this week
                         </span>
@@ -155,8 +154,8 @@
                             Active Farms
                         </span>
 
-                        <strong class="stat-number">
-                            36
+                        <strong class="stat-number" id="activeFarms">
+                            0
                         </strong>
 
                         <span class="stat-change">
@@ -198,72 +197,8 @@
                         </thead>
 
 
-                        <tbody>
-
-                            <tr
-                                class="record-row"
-                                data-scan-id="SCAN-000124"
-                            >
-                                <td>Juan</td>
-                                <td>Dela Cruz</td>
-                                <td>SCAN-000124</td>
-                                <td>Coffee Leaf Rust</td>
-                                <td>92.4%</td>
-                                <td>May 18, 2025 10:24 AM</td>
-                            </tr>
-
-
-                            <tr
-                                class="record-row"
-                                data-scan-id="SCAN-000123"
-                            >
-                                <td>Maria</td>
-                                <td>Santos</td>
-                                <td>SCAN-000123</td>
-                                <td>Cercospora Leaf Spot</td>
-                                <td>89.1%</td>
-                                <td>May 18, 2025 09:15 AM</td>
-                            </tr>
-
-
-                            <tr
-                                class="record-row"
-                                data-scan-id="SCAN-000122"
-                            >
-                                <td>Pedro</td>
-                                <td>Reyes</td>
-                                <td>SCAN-000122</td>
-                                <td>Coffee Berry Disease</td>
-                                <td>87.7%</td>
-                                <td>May 17, 2025 04:42 PM</td>
-                            </tr>
-
-
-                            <tr
-                                class="record-row"
-                                data-scan-id="SCAN-000121"
-                            >
-                                <td>Angela</td>
-                                <td>Garcia</td>
-                                <td>SCAN-000121</td>
-                                <td class="healthy">Healthy</td>
-                                <td>98.6%</td>
-                                <td>May 17, 2025 03:11 PM</td>
-                            </tr>
-
-
-                            <tr
-                                class="record-row"
-                                data-scan-id="SCAN-000120"
-                            >
-                                <td>Carlo</td>
-                                <td>Navarro</td>
-                                <td>SCAN-000120</td>
-                                <td>Coffee Leaf Rust</td>
-                                <td>91.3%</td>
-                                <td>May 17, 2025 11:08 AM</td>
-                            </tr>
-
+                        <tbody id="recentScansBody">
+                            <!-- Firebase records will be inserted here -->
                         </tbody>
 
                     </table>
@@ -286,7 +221,10 @@
     </div>
 
 
-    <script src="js/dashboard.js"></script>
+    <script
+        type="module"
+        src="js/dashboard.js"
+    ></script>
 
 </body>
 
