@@ -1,6 +1,4 @@
-// =========================================
-// ELEMENTS
-// =========================================
+
 
 const dashboardNav =
     document.getElementById("dashboardNav");

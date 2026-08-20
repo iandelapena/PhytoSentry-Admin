@@ -72,11 +72,6 @@ scanRecordsNav.addEventListener("click", () => {
 
 });
 
-
-// =========================================
-// LOGOUT
-// =========================================
-
 // Open confirmation
 logoutButton.addEventListener("click", () => {
     logoutModal.classList.add("show");
@@ -96,7 +91,7 @@ confirmLogout.addEventListener("click", () => {
 });
 
 
-// =========================================
+// ======================================
 // SEARCH
 // =========================================
 

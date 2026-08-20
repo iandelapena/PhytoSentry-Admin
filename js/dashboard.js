@@ -75,7 +75,6 @@ viewRecords.addEventListener("click", () => {
 });
 
 
-// Open confirmation
 logoutButton.addEventListener("click", () => {
     logoutModal.classList.add("show");
 });
@@ -111,10 +110,6 @@ async function loadDashboardData() {
                 collection(db, "users")
             );
 
-
-        // =====================================
-        // GET SCAN RECORDS
-        // =====================================
 
         const scansSnapshot =
             await getDocs(
