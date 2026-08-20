@@ -7,6 +7,7 @@
 
     <title>PhytoSentry Scan Records</title>
 
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
     <link rel="stylesheet" href="css/scan-records.css">
 </head>
 
@@ -49,7 +50,6 @@
             </nav>
 
             <button class="logout-button" id="logoutButton">
-                <span class="nav-icon">↪</span>
                 <span>Logout</span>
             </button>
 
@@ -80,8 +80,6 @@
                     id="downloadButton"
                     type="button"
                 >
-
-                    <span class="download-icon">↓</span>
 
                     <span>
                         Download Report
@@ -213,7 +211,27 @@
 
     </div>
 
+    <!-- LOGOUT CONFIRMATION -->
+    <div class="logout-modal" id="logoutModal">
+        <div class="logout-modal-content">
 
+            <h2>Logout</h2>
+
+            <p>Are you sure you want to logout?</p>
+
+            <div class="logout-modal-actions">
+                <button class="cancel-logout" id="cancelLogout">
+                    Cancel
+                </button>
+
+                <button class="confirm-logout" id="confirmLogout">
+                    Logout
+                </button>
+            </div>
+
+        </div>
+    </div>
+    
     <!-- JAVASCRIPT -->
     <script
         type="module"

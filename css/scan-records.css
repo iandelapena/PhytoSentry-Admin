@@ -162,8 +162,7 @@ body {
     gap: 12px;
 }
 
-.nav-item,
-.logout-button {
+.nav-item {
     width: 100%;
 
     display: flex;
@@ -183,6 +182,31 @@ body {
     font-size: 14px;
 
     text-align: left;
+
+    cursor: pointer;
+}
+
+.logout-button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 17px;
+
+    padding: 15px 18px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    text-align: center;
 
     cursor: pointer;
 }
@@ -208,6 +232,97 @@ body {
     background: rgba(255, 255, 255, 0.08);
 }
 
+
+/* =========================================
+   LOGOUT CONFIRMATION
+========================================= */
+
+.logout-modal {
+    position: fixed;
+    inset: 0;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.35);
+
+    z-index: 9999;
+}
+
+.logout-modal.show {
+    display: flex;
+}
+
+.logout-modal-content {
+    width: 320px;
+    padding: 25px;
+
+    background: #ffffff;
+    border-radius: 10px;
+
+    text-align: center;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.logout-modal-content h2 {
+    margin: 0 0 8px;
+
+    color: #234c2d;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.logout-modal-content p {
+    margin: 0 0 22px;
+
+    color: #666666;
+    font-size: 12px;
+}
+
+.logout-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.cancel-logout,
+.confirm-logout {
+    width: 100px;
+    padding: 9px 12px;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+/* CANCEL */
+
+.cancel-logout {
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    color: #555555;
+}
+
+.cancel-logout:hover {
+    background: #f5f5f5;
+}
+
+/* LOGOUT */
+
+.confirm-logout {
+    border: none;
+    background: #5b6e0e;
+    color: #ffffff;
+}
+
+.confirm-logout:hover {
+    background: #4d5d0c;
+}
 
 /* =========================================
    MAIN CONTENT
@@ -320,12 +435,6 @@ body {
 .download-button:hover {
     background: #f8f8f8;
 }
-
-.download-icon {
-    font-size: 20px;
-    font-weight: 700;
-}
-
 
 /* =========================================
    FILTERS
@@ -461,15 +570,13 @@ body {
 
 .table-wrapper {
     width: 100%;
-
-    overflow-x: auto;
+    overflow-x: hidden;
 }
 
 table {
     width: 100%;
-
+    min-width: 0;
     border-collapse: collapse;
-
     table-layout: fixed;
 }
 
@@ -478,79 +585,84 @@ thead {
 }
 
 th {
-    padding: 12px 13px;
-
+    padding: 14px 25px;
     color: #292929;
-
     font-size: 10px;
     font-weight: 700;
-
     text-align: left;
-
     border-bottom: 1px solid #e7e7e7;
 }
 
 td {
-    padding: 11px 13px;
-
+    padding: 13px 25px;
     color: #333333;
-
     font-size: 10px;
-
     border-bottom: 1px solid #eeeeee;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
+
+/* =========================================
+   COLUMN WIDTHS
+========================================= */
 
 /* FIRST NAME */
 th:nth-child(1),
 td:nth-child(1) {
-    width: 12%;
+    width: 10%;
 }
-
 
 /* LAST NAME */
 th:nth-child(2),
 td:nth-child(2) {
-    width: 13%;
-}
-
-
-/* SCAN ID */
-th:nth-child(3),
-td:nth-child(3) {
-    width: 15%;
-}
-
-
-/* DISEASE */
-th:nth-child(4),
-td:nth-child(4) {
-    width: 21%;
-}
-
-
-/* CONFIDENCE */
-th:nth-child(5),
-td:nth-child(5) {
-    width: 11%;
-}
-
-
-/* DATE */
-th:nth-child(6),
-td:nth-child(6) {
-    width: 18%;
-}
-
-
-/* STATUS */
-th:nth-child(7),
-td:nth-child(7) {
     width: 10%;
 }
 
-tbody tr:last-child td {
-    border-bottom: none;
+/* FARM NAME */
+th:nth-child(3),
+td:nth-child(3) {
+    width: 12%;
+}
+
+/* SCAN ID */
+th:nth-child(4),
+td:nth-child(4) {
+    width: 17%;
+}
+
+/* DISEASE DETECTED */
+th:nth-child(5),
+td:nth-child(5) {
+    width: 16%;
+}
+
+/* CONFIDENCE */
+th:nth-child(6),
+td:nth-child(6) {
+    width: 10%;
+}
+
+/* DATE/TIME */
+th:nth-child(7),
+td:nth-child(7) {
+    width: 15%;
+}
+
+/* STATUS */
+th:nth-child(8),
+td:nth-child(8) {
+    width: 10%;
+}
+
+
+/* DATE/TIME + STATUS */
+th:nth-child(7),
+td:nth-child(7),
+th:nth-child(8),
+td:nth-child(8) {
+    white-space: nowrap;
 }
 
 
@@ -625,7 +737,6 @@ tbody tr:last-child td {
 ========================================= */
 
 @media (max-width: 1100px) {
-
     .sidebar {
         width: 210px;
     }
@@ -635,13 +746,11 @@ tbody tr:last-child td {
     }
 
     table {
-        min-width: 950px;
+        min-width: 0;
     }
 }
 
-
 @media (max-width: 750px) {
-
     .dashboard {
         flex-direction: column;
     }
@@ -649,13 +758,11 @@ tbody tr:last-child td {
     .sidebar {
         width: 100%;
         min-height: auto;
-
         padding: 15px 18px;
     }
 
     .brand {
         justify-content: center;
-
         margin-bottom: 15px;
     }
 
@@ -673,7 +780,6 @@ tbody tr:last-child td {
 
     .logout-button {
         width: auto;
-
         margin-top: 10px;
     }
 
@@ -699,6 +805,6 @@ tbody tr:last-child td {
     }
 
     table {
-        min-width: 950px;
+        min-width: 0;
     }
 }

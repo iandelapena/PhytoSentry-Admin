@@ -16,8 +16,17 @@ const dashboardNav =
 const scanRecordsNav =
     document.getElementById("scanRecordsNav");
 
-const logoutButton =
+const logoutButton = 
     document.getElementById("logoutButton");
+
+const logoutModal = 
+    document.getElementById("logoutModal");
+
+const cancelLogout = 
+    document.getElementById("cancelLogout");
+
+const confirmLogout = 
+    document.getElementById("confirmLogout");
 
 const viewRecords =
     document.getElementById("viewRecords");
@@ -66,27 +75,22 @@ viewRecords.addEventListener("click", () => {
 });
 
 
+// Open confirmation
 logoutButton.addEventListener("click", () => {
+    logoutModal.classList.add("show");
+});
 
-    if (
-        confirm(
-            "Are you sure you want to logout?"
-        )
-    ) {
+// Cancel
+cancelLogout.addEventListener("click", () => {
+    logoutModal.classList.remove("show");
+});
 
-        localStorage.removeItem(
-            "phytosentryAdminUsername"
-        );
+// Confirm logout
+confirmLogout.addEventListener("click", () => {
+    localStorage.removeItem("phytosentryAdminUsername");
+    localStorage.removeItem("selectedScanId");
 
-        localStorage.removeItem(
-            "selectedScanId"
-        );
-
-        window.location.href =
-            "login.html";
-
-    }
-
+    window.location.href = "login.html";
 });
 
 

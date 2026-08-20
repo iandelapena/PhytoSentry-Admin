@@ -7,6 +7,7 @@
 
     <title>PhytoSentry Dashboard</title>
 
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 
@@ -52,7 +53,6 @@
 
 
             <button class="logout-button" id="logoutButton">
-                <span class="nav-icon">↪</span>
                 <span>Logout</span>
             </button>
 
@@ -210,14 +210,33 @@
 
                     <span>View Full Scan Records</span>
 
-                    <span>→</span>
-
                 </button>
 
             </section>
 
         </main>
 
+    </div>
+
+    <!-- LOGOUT CONFIRMATION -->
+    <div class="logout-modal" id="logoutModal">
+        <div class="logout-modal-content">
+
+            <h2>Logout</h2>
+
+            <p>Are you sure you want to logout?</p>
+
+            <div class="logout-modal-actions">
+                <button class="cancel-logout" id="cancelLogout">
+                    Cancel
+                </button>
+
+                <button class="confirm-logout" id="confirmLogout">
+                    Logout
+                </button>
+            </div>
+
+        </div>
     </div>
 
 
