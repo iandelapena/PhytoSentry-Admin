@@ -214,6 +214,65 @@
 
             </section>
 
+            <!-- ANALYTICS CHARTS -->
+            <section class="charts-grid charts-grid-two">
+
+                <div class="chart-card">
+                    <div class="chart-body">
+                        <canvas id="weeklyScanVolumeChart"></canvas>
+                    </div>
+                    <div class="chart-meta">
+                        <h3>Weekly Scan Activity</h3>
+                        <p id="chart-description-weekly">Tracks the daily number of scans completed over the past 7 days to monitor platform usage patterns.</p>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-body">
+                        <canvas id="diseaseDistributionChart"></canvas>
+                    </div>
+                    <div class="chart-meta">
+                        <h3>Crop Health &amp; Disease Distribution</h3>
+                        <p id="chart-description-disease">Displays the percentage share of each detected condition across all completed scans.</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="charts-grid charts-grid-three">
+
+                <div class="chart-card compact-card">
+                    <div class="chart-body">
+                        <canvas id="confidenceBandsChart"></canvas>
+                    </div>
+                    <div class="chart-meta">
+                        <h3>AI Model Detection Accuracy</h3>
+                        <p id="chart-description-confidence">Categorizes scans by confidence score ranges to verify model reliability.</p>
+                    </div>
+                </div>
+
+                <div class="chart-card compact-card">
+                    <div class="chart-body">
+                        <canvas id="topActiveFarmsChart"></canvas>
+                    </div>
+                    <div class="chart-meta">
+                        <h3>Most Active Farm Locations</h3>
+                        <p id="chart-description-farms">Highlights the top registered farms generating the highest scan traffic.</p>
+                    </div>
+                </div>
+
+                <div class="chart-card compact-card">
+                    <div class="chart-body">
+                        <canvas id="peakUsageHoursChart"></canvas>
+                    </div>
+                    <div class="chart-meta">
+                        <h3>Peak Usage Hours</h3>
+                        <p id="chart-description-hours">Shows total scan counts broken down by time intervals to reveal active inspection times.</p>
+                    </div>
+                </div>
+
+            </section>
+
         </main>
 
     </div>
@@ -221,24 +280,20 @@
     <!-- LOGOUT CONFIRMATION -->
     <div class="logout-modal" id="logoutModal">
         <div class="logout-modal-content">
-
             <h2>Logout</h2>
-
             <p>Are you sure you want to logout?</p>
-
             <div class="logout-modal-actions">
                 <button class="cancel-logout" id="cancelLogout">
                     Cancel
                 </button>
-
                 <button class="confirm-logout" id="confirmLogout">
                     Logout
                 </button>
             </div>
-
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script
         type="module"
         src="js/dashboard.js"
