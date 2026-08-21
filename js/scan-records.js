@@ -491,26 +491,29 @@ downloadPdf.addEventListener("click", () => {
 
 
     // =====================================
-    // CREATE PDF
+    // CHECK jsPDF
     // =====================================
+
+    if (!window.jspdf) {
+
+        alert(
+            "PDF library could not be loaded."
+        );
+
+        console.error(
+            "jsPDF is not available."
+        );
+
+        return;
+
+    }
+
 
     const { jsPDF } = window.jspdf;
 
+
     const doc =
         new jsPDF("landscape");
-
-
-    // =====================================
-    // TITLE
-    // =====================================
-
-    doc.setFontSize(20);
-
-    doc.text(
-        "PhytoSentry Scan Report",
-        14,
-        18
-    );
 
 
     // =====================================
@@ -528,22 +531,9 @@ downloadPdf.addEventListener("click", () => {
         );
 
 
-    doc.setFontSize(10);
-
-    doc.text(
-        `Generated: ${reportDate}`,
-        14,
-        26
-    );
-
-
     // =====================================
-    // FILTER INFORMATION
+    // GET FILTERS
     // =====================================
-
-    let filterText =
-        "Filters: ";
-
 
     const selectedDisease =
         diseaseFilter.value;
@@ -557,16 +547,14 @@ downloadPdf.addEventListener("click", () => {
         endDate.value;
 
 
+    let filterText =
+        "Disease: All";
+
+
     if (selectedDisease !== "all") {
 
-        filterText +=
-            `Disease: ${selectedDisease} | `;
-
-    }
-    else {
-
-        filterText +=
-            "Disease: All | ";
+        filterText =
+            `Disease: ${selectedDisease}`;
 
     }
 
@@ -574,7 +562,7 @@ downloadPdf.addEventListener("click", () => {
     if (selectedStartDate) {
 
         filterText +=
-            `From: ${selectedStartDate} | `;
+            ` | From: ${selectedStartDate}`;
 
     }
 
@@ -582,20 +570,57 @@ downloadPdf.addEventListener("click", () => {
     if (selectedEndDate) {
 
         filterText +=
-            `To: ${selectedEndDate}`;
+            ` | To: ${selectedEndDate}`;
 
     }
 
 
-    doc.text(
-        filterText,
-        14,
-        33
-    );
+    // =====================================
+    // GET RECORD DATA
+    // =====================================
+
+    const records =
+        rows.map((row) => {
+
+            const cells =
+                row.querySelectorAll("td");
+
+
+            return {
+
+                firstName:
+                    cells[0].textContent.trim(),
+
+                lastName:
+                    cells[1].textContent.trim(),
+
+                farmName:
+                    cells[2].textContent.trim(),
+
+                scanId:
+                    cells[3].textContent.trim(),
+
+                disease:
+                    cells[4].textContent.trim(),
+
+                confidence:
+                    parseFloat(
+                        cells[5].textContent
+                    ) || 0,
+
+                dateTime:
+                    cells[6].textContent.trim(),
+
+                status:
+                    cells[7].textContent.trim()
+
+            };
+
+        });
 
 
     // =====================================
-    // SUMMARY
+    // CALCULATE SUMMARY
     // =====================================
 
     const diseaseCounts = {};
@@ -604,85 +629,447 @@ downloadPdf.addEventListener("click", () => {
     let totalConfidence = 0;
 
 
-    rows.forEach((row) => {
+    records.forEach((record) => {
 
-        const cells =
-            row.querySelectorAll("td");
-
-
-        const disease =
-            cells[4].textContent.trim();
-
-
-        const confidence =
-            parseFloat(
-                cells[5].textContent
-            ) || 0;
-
-
-        diseaseCounts[disease] =
-            (diseaseCounts[disease] || 0) + 1;
+        diseaseCounts[record.disease] =
+            (diseaseCounts[record.disease] || 0) + 1;
 
 
         totalConfidence +=
-            confidence;
+            record.confidence;
 
     });
 
 
     const averageConfidence =
-        totalConfidence / rows.length;
+        totalConfidence / records.length;
 
 
-    doc.setFontSize(12);
+    // =====================================
+    // CONFIDENCE GROUPS
+    // =====================================
+
+    const confidenceGroups = {
+
+        "90–100%": 0,
+
+        "80–89%": 0,
+
+        "70–79%": 0,
+
+        "60–69%": 0,
+
+        "Below 60%": 0
+
+    };
+
+
+    records.forEach((record) => {
+
+        const confidence =
+            record.confidence;
+
+
+        if (confidence >= 90) {
+
+            confidenceGroups["90–100%"]++;
+
+        }
+        else if (confidence >= 80) {
+
+            confidenceGroups["80–89%"]++;
+
+        }
+        else if (confidence >= 70) {
+
+            confidenceGroups["70–79%"]++;
+
+        }
+        else if (confidence >= 60) {
+
+            confidenceGroups["60–69%"]++;
+
+        }
+        else {
+
+            confidenceGroups["Below 60%"]++;
+
+        }
+
+    });
+
+
+    // =====================================
+    // PAGE 1 — REPORT HEADER
+    // =====================================
+
+    doc.setFontSize(22);
 
     doc.text(
-        `Total Scans: ${rows.length}`,
+        "PhytoSentry",
         14,
-        43
+        18
+    );
+
+
+    doc.setFontSize(16);
+
+    doc.text(
+        "Scan Analysis Report",
+        14,
+        27
+    );
+
+
+    doc.setFontSize(9);
+
+    doc.text(
+        `Generated: ${reportDate}`,
+        14,
+        35
     );
 
 
     doc.text(
-        `Average Confidence: ${averageConfidence.toFixed(1)}%`,
+        `Filters: ${filterText}`,
         14,
-        50
+        41
     );
 
 
     // =====================================
-    // DISEASE SUMMARY
+    // SUMMARY CARDS
     // =====================================
-
-    let summaryY = 60;
-
 
     doc.setFontSize(11);
 
     doc.text(
-        "Disease Summary",
+        "Report Summary",
         14,
-        summaryY
+        52
     );
 
 
-    summaryY += 7;
+    // Total scans
+
+    doc.rect(
+        14,
+        58,
+        75,
+        25
+    );
 
 
-    Object.entries(diseaseCounts)
-        .forEach(([disease, count]) => {
+    doc.setFontSize(9);
 
-            doc.setFontSize(9);
+    doc.text(
+        "TOTAL SCANS",
+        19,
+        66
+    );
 
-            doc.text(
-                `${disease}: ${count}`,
-                18,
-                summaryY
+
+    doc.setFontSize(18);
+
+    doc.text(
+        String(records.length),
+        19,
+        77
+    );
+
+
+    // Average confidence
+
+    doc.rect(
+        95,
+        58,
+        75,
+        25
+    );
+
+
+    doc.setFontSize(9);
+
+    doc.text(
+        "AVERAGE CONFIDENCE",
+        100,
+        66
+    );
+
+
+    doc.setFontSize(18);
+
+    doc.text(
+        `${averageConfidence.toFixed(1)}%`,
+        100,
+        77
+    );
+
+
+    // =====================================
+    // DISEASE DISTRIBUTION
+    // =====================================
+
+    doc.setFontSize(12);
+
+    doc.text(
+        "Disease Distribution",
+        14,
+        96
+    );
+
+
+    const diseaseEntries =
+        Object.entries(diseaseCounts);
+
+
+    const chartX = 20;
+
+    const chartY = 104;
+
+    const chartWidth = 240;
+
+    const chartHeight = 55;
+
+
+    const maxDiseaseCount =
+        Math.max(
+            ...diseaseEntries.map(
+                ([, count]) => count
+            ),
+            1
+        );
+
+
+    // Chart border
+
+    doc.rect(
+        chartX,
+        chartY,
+        chartWidth,
+        chartHeight
+    );
+
+
+    diseaseEntries.forEach(
+        ([disease, count], index) => {
+
+            const barHeight =
+                (count / maxDiseaseCount) *
+                35;
+
+
+            const x =
+                chartX +
+                10 +
+                index *
+                (
+                    (chartWidth - 20) /
+                    diseaseEntries.length
+                );
+
+
+            const barWidth =
+                Math.min(
+                    25,
+                    (
+                        chartWidth - 30
+                    ) /
+                    diseaseEntries.length
+                );
+
+
+            const y =
+                chartY +
+                chartHeight -
+                12 -
+                barHeight;
+
+
+            // Bar
+
+            doc.rect(
+                x,
+                y,
+                barWidth,
+                barHeight,
+                "F"
             );
 
-            summaryY += 5;
 
-        });
+            // Count
+
+            doc.setFontSize(8);
+
+            doc.text(
+                String(count),
+                x + barWidth / 2,
+                y - 2,
+                {
+                    align: "center"
+                }
+            );
+
+
+            // Disease label
+
+            const shortName =
+                disease.length > 14
+                    ? disease.substring(0, 14) + "..."
+                    : disease;
+
+
+            doc.text(
+                shortName,
+                x + barWidth / 2,
+                chartY + chartHeight - 4,
+                {
+                    align: "center"
+                }
+            );
+
+        }
+    );
+
+
+    // =====================================
+    // CONFIDENCE DISTRIBUTION
+    // =====================================
+
+    doc.setFontSize(12);
+
+    doc.text(
+        "Confidence Distribution",
+        14,
+        175
+    );
+
+
+    const confidenceEntries =
+        Object.entries(
+            confidenceGroups
+        );
+
+
+    const confidenceChartX = 20;
+
+    const confidenceChartY = 183;
+
+    const confidenceChartWidth = 240;
+
+    const confidenceChartHeight = 55;
+
+
+    const maxConfidenceCount =
+        Math.max(
+            ...confidenceEntries.map(
+                ([, count]) => count
+            ),
+            1
+        );
+
+
+    doc.rect(
+        confidenceChartX,
+        confidenceChartY,
+        confidenceChartWidth,
+        confidenceChartHeight
+    );
+
+
+    confidenceEntries.forEach(
+        ([label, count], index) => {
+
+            const barHeight =
+                (count / maxConfidenceCount) *
+                35;
+
+
+            const x =
+                confidenceChartX +
+                12 +
+                index *
+                42;
+
+
+            const barWidth =
+                24;
+
+
+            const y =
+                confidenceChartY +
+                confidenceChartHeight -
+                12 -
+                barHeight;
+
+
+            // Bar
+
+            doc.rect(
+                x,
+                y,
+                barWidth,
+                barHeight,
+                "F"
+            );
+
+
+            // Count
+
+            doc.setFontSize(8);
+
+            doc.text(
+                String(count),
+                x + barWidth / 2,
+                y - 2,
+                {
+                    align: "center"
+                }
+            );
+
+
+            // Label
+
+            doc.setFontSize(7);
+
+            doc.text(
+                label,
+                x + barWidth / 2,
+                confidenceChartY +
+                confidenceChartHeight -
+                4,
+                {
+                    align: "center"
+                }
+            );
+
+        }
+    );
+
+
+    // =====================================
+    // PAGE 2 — DETAILED RECORDS
+    // =====================================
+
+    doc.addPage();
+
+
+    doc.setFontSize(16);
+
+    doc.text(
+        "Detailed Scan Records",
+        14,
+        18
+    );
+
+
+    doc.setFontSize(9);
+
+    doc.text(
+        `Total records: ${records.length}`,
+        14,
+        25
+    );
 
 
     // =====================================
@@ -690,29 +1077,25 @@ downloadPdf.addEventListener("click", () => {
     // =====================================
 
     const tableData =
-        rows.map((row) => {
-
-            const cells =
-                row.querySelectorAll("td");
-
+        records.map((record) => {
 
             return [
 
-                cells[0].textContent.trim(),
+                record.firstName,
 
-                cells[1].textContent.trim(),
+                record.lastName,
 
-                cells[2].textContent.trim(),
+                record.farmName,
 
-                cells[3].textContent.trim(),
+                record.scanId,
 
-                cells[4].textContent.trim(),
+                record.disease,
 
-                cells[5].textContent.trim(),
+                `${record.confidence.toFixed(1)}%`,
 
-                cells[6].textContent.trim(),
+                record.dateTime,
 
-                cells[7].textContent.trim()
+                record.status
 
             ];
 
@@ -725,7 +1108,7 @@ downloadPdf.addEventListener("click", () => {
 
     doc.autoTable({
 
-        startY: summaryY + 5,
+        startY: 32,
 
         head: [[
 
@@ -772,6 +1155,35 @@ downloadPdf.addEventListener("click", () => {
         }
 
     });
+
+
+    // =====================================
+    // FOOTER ON ALL PAGES
+    // =====================================
+
+    const pageCount =
+        doc.internal.getNumberOfPages();
+
+
+    for (
+        let page = 1;
+        page <= pageCount;
+        page++
+    ) {
+
+        doc.setPage(page);
+
+
+        doc.setFontSize(8);
+
+
+        doc.text(
+            `PhytoSentry Scan Report | Page ${page} of ${pageCount}`,
+            14,
+            200
+        );
+
+    }
 
 
     // =====================================
