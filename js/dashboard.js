@@ -105,16 +105,31 @@ async function loadDashboardData() {
         // GET USERS
         // =====================================
 
-        const usersSnapshot =
-            await getDocs(
-                collection(db, "users")
-            );
-
-
         const scansSnapshot =
-            await getDocs(
-                collection(db, "scanHistory")
+             await getDocs(
+              collection(db, "scanHistory")
             );
+
+        const users = new Set();
+
+        scansSnapshot.forEach((doc) => {
+            const data = doc.data();
+
+            const firstName =
+                data.firstName || "";
+
+            const lastName =
+                data.LastName ||
+                data.lastName ||
+                "";
+
+            const userName =
+                `${firstName} ${lastName}`.trim().toLowerCase();
+
+            if (userName) {
+                users.add(userName);
+            }
+        });
 
 
         console.log(
@@ -123,7 +138,7 @@ async function loadDashboardData() {
 
         console.log(
             "Users found:",
-            usersSnapshot.size
+            users.size
         );
 
         console.log(
@@ -198,7 +213,7 @@ async function loadDashboardData() {
         // =====================================
 
         totalUsers.textContent =
-            usersSnapshot.size;
+               users.size;
 
         totalScans.textContent =
             scansSnapshot.size;
@@ -420,7 +435,7 @@ async function loadDashboardData() {
 
         console.log(
             "Total users:",
-            usersSnapshot.size
+            users.size
         );
 
         console.log(
