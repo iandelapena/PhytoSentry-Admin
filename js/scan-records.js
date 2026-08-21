@@ -42,6 +42,17 @@ const diseaseFilter =
 const downloadButton =
     document.getElementById("downloadButton");
 
+ const downloadModal =
+    document.getElementById("downloadModal");
+
+const downloadCsv =
+    document.getElementById("downloadCsv");
+
+const downloadPdf =
+    document.getElementById("downloadPdf");
+
+const cancelDownload =
+    document.getElementById("cancelDownload");
 const recordsBody =
     document.getElementById("recordsTableBody");
 
@@ -306,18 +317,59 @@ function filterRecords() {
 }
 
 // =========================================
-// DOWNLOAD REPORT
+// DOWNLOAD REPORT MODAL
 // =========================================
 
 downloadButton.addEventListener("click", () => {
 
+    console.log("DOWNLOAD BUTTON CLICKED");
+
     const rows =
-    Array.from(
-        document.querySelectorAll(".record-row")
-    )
-            .filter(row =>
-                row.style.display !== "none"
-            );
+        Array.from(
+            document.querySelectorAll(".record-row")
+        ).filter(row =>
+            row.style.display !== "none"
+        );
+
+    console.log("Visible rows:", rows.length);
+
+    if (rows.length === 0) {
+
+        alert("There are no records to download.");
+
+        return;
+
+    }
+
+    console.log("Opening download modal");
+
+    downloadModal.classList.add("show");
+
+});
+
+// =========================================
+// CANCEL DOWNLOAD
+// =========================================
+
+cancelDownload.addEventListener("click", () => {
+
+    downloadModal.classList.remove("show");
+
+});
+
+
+// =========================================
+// DOWNLOAD CSV
+// =========================================
+
+downloadCsv.addEventListener("click", () => {
+
+    const rows =
+        Array.from(
+            document.querySelectorAll(".record-row")
+        ).filter(row =>
+            row.style.display !== "none"
+        );
 
 
     if (rows.length === 0) {
@@ -331,65 +383,46 @@ downloadButton.addEventListener("click", () => {
     }
 
 
-    // =====================================
-    // CSV HEADER
-    // =====================================
-
     let csv =
-    "First Name,Last Name,Farm Name,Scan ID,Disease Detected,Confidence %,Date/Time,Status\n";
+        "First Name,Last Name,Farm Name,Scan ID,Disease Detected,Confidence %,Date/Time,Status\n";
 
-
-    // =====================================
-    // CSV DATA
-    // =====================================
 
     rows.forEach((row) => {
 
-    const cells =
-        row.querySelectorAll("td");
+        const cells =
+            row.querySelectorAll("td");
 
 
-    const firstName =
-        cells[0].textContent.trim();
+        const firstName =
+            cells[0].textContent.trim();
+
+        const lastName =
+            cells[1].textContent.trim();
+
+        const farmName =
+            cells[2].textContent.trim();
+
+        const scanId =
+            cells[3].textContent.trim();
+
+        const disease =
+            cells[4].textContent.trim();
+
+        const confidence =
+            cells[5].textContent.trim();
+
+        const dateTime =
+            cells[6].textContent.trim();
+
+        const status =
+            cells[7].textContent.trim();
 
 
-    const lastName =
-        cells[1].textContent.trim();
+        csv +=
+            `"${firstName}","${lastName}","${farmName}","${scanId}","${disease}","${confidence}","${dateTime}","${status}"\n`;
 
+    });
 
-    const farmName =
-        cells[2].textContent.trim();
-
-
-    const scanId =
-        cells[3].textContent.trim();
-
-
-    const disease =
-        cells[4].textContent.trim();
-
-
-    const confidence =
-        cells[5].textContent.trim();
-
-
-    const dateTime =
-        cells[6].textContent.trim();
-
-
-    const status =
-        cells[7].textContent.trim();
-
-
-    csv +=
-        `"${firstName}","${lastName}","${farmName}","${scanId}","${disease}","${confidence}","${dateTime}","${status}"\n`;
-
-});
-
-
-    // =====================================
-    // CREATE CSV FILE
-    // =====================================
 
     const blob =
         new Blob(
@@ -419,14 +452,344 @@ downloadButton.addEventListener("click", () => {
 
     document.body.appendChild(link);
 
-
     link.click();
-
 
     document.body.removeChild(link);
 
-
     URL.revokeObjectURL(url);
+
+
+    // Close modal
+
+    downloadModal.classList.remove("show");
+
+});
+
+// =========================================
+// DOWNLOAD PDF
+// =========================================
+
+downloadPdf.addEventListener("click", () => {
+
+    const rows =
+        Array.from(
+            document.querySelectorAll(".record-row")
+        ).filter(row =>
+            row.style.display !== "none"
+        );
+
+
+    if (rows.length === 0) {
+
+        alert(
+            "There are no records to download."
+        );
+
+        return;
+
+    }
+
+
+    // =====================================
+    // CREATE PDF
+    // =====================================
+
+    const { jsPDF } = window.jspdf;
+
+    const doc =
+        new jsPDF("landscape");
+
+
+    // =====================================
+    // TITLE
+    // =====================================
+
+    doc.setFontSize(20);
+
+    doc.text(
+        "PhytoSentry Scan Report",
+        14,
+        18
+    );
+
+
+    // =====================================
+    // REPORT DATE
+    // =====================================
+
+    const reportDate =
+        new Date().toLocaleDateString(
+            "en-US",
+            {
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            }
+        );
+
+
+    doc.setFontSize(10);
+
+    doc.text(
+        `Generated: ${reportDate}`,
+        14,
+        26
+    );
+
+
+    // =====================================
+    // FILTER INFORMATION
+    // =====================================
+
+    let filterText =
+        "Filters: ";
+
+
+    const selectedDisease =
+        diseaseFilter.value;
+
+
+    const selectedStartDate =
+        startDate.value;
+
+
+    const selectedEndDate =
+        endDate.value;
+
+
+    if (selectedDisease !== "all") {
+
+        filterText +=
+            `Disease: ${selectedDisease} | `;
+
+    }
+    else {
+
+        filterText +=
+            "Disease: All | ";
+
+    }
+
+
+    if (selectedStartDate) {
+
+        filterText +=
+            `From: ${selectedStartDate} | `;
+
+    }
+
+
+    if (selectedEndDate) {
+
+        filterText +=
+            `To: ${selectedEndDate}`;
+
+    }
+
+
+    doc.text(
+        filterText,
+        14,
+        33
+    );
+
+
+    // =====================================
+    // SUMMARY
+    // =====================================
+
+    const diseaseCounts = {};
+
+
+    let totalConfidence = 0;
+
+
+    rows.forEach((row) => {
+
+        const cells =
+            row.querySelectorAll("td");
+
+
+        const disease =
+            cells[4].textContent.trim();
+
+
+        const confidence =
+            parseFloat(
+                cells[5].textContent
+            ) || 0;
+
+
+        diseaseCounts[disease] =
+            (diseaseCounts[disease] || 0) + 1;
+
+
+        totalConfidence +=
+            confidence;
+
+    });
+
+
+    const averageConfidence =
+        totalConfidence / rows.length;
+
+
+    doc.setFontSize(12);
+
+    doc.text(
+        `Total Scans: ${rows.length}`,
+        14,
+        43
+    );
+
+
+    doc.text(
+        `Average Confidence: ${averageConfidence.toFixed(1)}%`,
+        14,
+        50
+    );
+
+
+    // =====================================
+    // DISEASE SUMMARY
+    // =====================================
+
+    let summaryY = 60;
+
+
+    doc.setFontSize(11);
+
+    doc.text(
+        "Disease Summary",
+        14,
+        summaryY
+    );
+
+
+    summaryY += 7;
+
+
+    Object.entries(diseaseCounts)
+        .forEach(([disease, count]) => {
+
+            doc.setFontSize(9);
+
+            doc.text(
+                `${disease}: ${count}`,
+                18,
+                summaryY
+            );
+
+            summaryY += 5;
+
+        });
+
+
+    // =====================================
+    // TABLE DATA
+    // =====================================
+
+    const tableData =
+        rows.map((row) => {
+
+            const cells =
+                row.querySelectorAll("td");
+
+
+            return [
+
+                cells[0].textContent.trim(),
+
+                cells[1].textContent.trim(),
+
+                cells[2].textContent.trim(),
+
+                cells[3].textContent.trim(),
+
+                cells[4].textContent.trim(),
+
+                cells[5].textContent.trim(),
+
+                cells[6].textContent.trim(),
+
+                cells[7].textContent.trim()
+
+            ];
+
+        });
+
+
+    // =====================================
+    // PDF TABLE
+    // =====================================
+
+    doc.autoTable({
+
+        startY: summaryY + 5,
+
+        head: [[
+
+            "First Name",
+
+            "Last Name",
+
+            "Farm Name",
+
+            "Scan ID",
+
+            "Disease",
+
+            "Confidence",
+
+            "Date/Time",
+
+            "Status"
+
+        ]],
+
+        body: tableData,
+
+        styles: {
+
+            fontSize: 7,
+
+            cellPadding: 3
+
+        },
+
+        headStyles: {
+
+            fontSize: 7
+
+        },
+
+        margin: {
+
+            left: 10,
+
+            right: 10
+
+        }
+
+    });
+
+
+    // =====================================
+    // SAVE PDF
+    // =====================================
+
+    doc.save(
+        "phytosentry-scan-report.pdf"
+    );
+
+
+    // =====================================
+    // CLOSE MODAL
+    // =====================================
+
+    downloadModal.classList.remove(
+        "show"
+    );
 
 });
 
