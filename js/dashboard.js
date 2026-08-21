@@ -224,7 +224,155 @@ async function loadDashboardData() {
         activeFarms.textContent =
             farms.size;
 
+                const usersChange =
+            document.getElementById("usersChange");
 
+        const scansChange =
+            document.getElementById("scansChange");
+
+        const diseaseChange =
+            document.getElementById("diseaseChange");
+
+        const farmsChange =
+    document.getElementById("farmsChange");
+
+    // =====================================
+// CALCULATE THIS WEEK'S CHANGES
+// =====================================
+
+const now = new Date();
+
+const startOfWeek = new Date(now);
+
+const day = startOfWeek.getDay();
+
+const diff =
+    day === 0
+        ? -6
+        : 1 - day;
+
+startOfWeek.setDate(
+    startOfWeek.getDate() + diff
+);
+
+startOfWeek.setHours(
+    0, 0, 0, 0
+);
+
+
+const weeklyUsers =
+    new Set();
+
+let weeklyScans = 0;
+
+let weeklyDiseaseDetections = 0;
+
+const weeklyFarms =
+    new Set();
+
+
+scansSnapshot.forEach((doc) => {
+
+    const data =
+        doc.data();
+
+    // Use the exact ISO timestamp for reliable math
+    const capturedAt = data.capturedAt || "";
+
+    if (!capturedAt) {
+        return;
+    }
+
+    const scanDate = new Date(capturedAt);
+    
+
+        if (isNaN(scanDate.getTime())) {
+            return;
+        }
+
+    // Only count this week's records
+
+    if (scanDate >= startOfWeek) {
+
+        weeklyScans++;
+
+
+        // -----------------------------
+        // USER
+        // -----------------------------
+
+        const firstName =
+            data.firstName || "";
+
+        const lastName =
+            data.LastName ||
+            data.lastName ||
+            "";
+
+        const userName =
+            `${firstName} ${lastName}`
+                .trim()
+                .toLowerCase();
+
+
+        if (userName) {
+            weeklyUsers.add(userName);
+        }
+
+
+        // -----------------------------
+        // DISEASE
+        // -----------------------------
+
+        const disease =
+            data.displayName ||
+            data.scientificName ||
+            data.prediction?.label ||
+            "Unknown";
+
+
+        if (
+            disease.toLowerCase() !==
+            "healthy leaf"
+        ) {
+
+            weeklyDiseaseDetections++;
+
+        }
+
+
+        // -----------------------------
+        // FARM
+        // -----------------------------
+
+        const farmName =
+            data.farmName ||
+            data.FarmName ||
+            "";
+
+
+        if (farmName) {
+
+            weeklyFarms.add(
+                farmName
+            );
+
+        }
+
+    }
+
+});
+usersChange.textContent =
+    `+${weeklyUsers.size} this week`;
+
+scansChange.textContent =
+    `+${weeklyScans} this week`;
+
+diseaseChange.textContent =
+    `+${weeklyDiseaseDetections} this week`;
+
+farmsChange.textContent =
+    `+${weeklyFarms.size} this week`;
         // =====================================
         // CLEAR TABLE
         // =====================================
