@@ -333,10 +333,20 @@ body {
     flex: 1;
 
     min-width: 0;
+    height: 100vh;
+    max-height: 100vh;
 
     padding: 32px 30px;
 
     background: #f0f0f0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.main-content::-webkit-scrollbar {
+    display: none;
 }
 
 .main-content h1 {
@@ -444,8 +454,69 @@ body {
    RECENT SCANS
 ========================================= */
 
+.charts-grid {
+    width: 100%;
+    display: grid;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.charts-grid-two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.charts-grid-three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.chart-card {
+    min-height: 270px;
+    display: flex;
+    flex-direction: column;
+    padding: 18px 16px 14px;
+    background: #ffffff;
+    border: 1px solid #e2e2e2;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(23, 58, 37, 0.04);
+}
+
+.compact-card {
+    min-height: 260px;
+}
+
+.chart-body {
+    position: relative;
+    width: 100%;
+    height: 185px;
+    margin-bottom: 12px;
+}
+
+.chart-card canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.chart-meta {
+    margin-top: auto;
+}
+
+.chart-meta h3 {
+    margin: 0 0 8px;
+    color: #1d2a24;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.chart-meta p {
+    color: #5d6d67;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
 .recent-scans {
     width: 100%;
+
+    margin-bottom: 18px;
 
     padding: 19px 0 22px;
 
