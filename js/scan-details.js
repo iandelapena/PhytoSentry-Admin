@@ -1,4 +1,14 @@
+import { db } from "./firebase.js";
 
+import {
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+// =========================================
+// ELEMENTS
+// =========================================
 
 const dashboardNav =
     document.getElementById("dashboardNav");
@@ -6,23 +16,25 @@ const dashboardNav =
 const scanRecordsNav =
     document.getElementById("scanRecordsNav");
 
-const logoutButton = 
+const logoutButton =
     document.getElementById("logoutButton");
 
-const logoutModal = 
+const logoutModal =
     document.getElementById("logoutModal");
 
-const cancelLogout = 
+const cancelLogout =
     document.getElementById("cancelLogout");
 
-const confirmLogout = 
+const confirmLogout =
     document.getElementById("confirmLogout");
 
 const backButton =
     document.getElementById("backButton");
 
 
-// Scan information
+// =========================================
+// SCAN INFORMATION
+// =========================================
 
 const scanId =
     document.getElementById("scanId");
@@ -34,7 +46,9 @@ const scanStatus =
     document.getElementById("scanStatus");
 
 
-// Detection information
+// =========================================
+// DETECTION INFORMATION
+// =========================================
 
 const diseaseDetected =
     document.getElementById("diseaseDetected");
@@ -46,7 +60,9 @@ const severity =
     document.getElementById("severity");
 
 
-// Farm information
+// =========================================
+// FARM INFORMATION
+// =========================================
 
 const farmerName =
     document.getElementById("farmerName");
@@ -61,7 +77,8 @@ const farmName =
 
 dashboardNav.addEventListener("click", () => {
 
-    window.location.href = "dashboard.html";
+    window.location.href =
+        "dashboard.html";
 
 });
 
@@ -72,7 +89,8 @@ dashboardNav.addEventListener("click", () => {
 
 scanRecordsNav.addEventListener("click", () => {
 
-    window.location.href = "scan-records.html";
+    window.location.href =
+        "scan-records.html";
 
 });
 
@@ -83,7 +101,8 @@ scanRecordsNav.addEventListener("click", () => {
 
 backButton.addEventListener("click", () => {
 
-    window.location.href = "scan-records.html";
+    window.location.href =
+        "scan-records.html";
 
 });
 
@@ -92,22 +111,33 @@ backButton.addEventListener("click", () => {
 // LOGOUT
 // =========================================
 
-// Open confirmation
 logoutButton.addEventListener("click", () => {
+
     logoutModal.classList.add("show");
+
 });
 
-// Cancel
+
 cancelLogout.addEventListener("click", () => {
+
     logoutModal.classList.remove("show");
+
 });
 
-// Confirm logout
-confirmLogout.addEventListener("click", () => {
-    localStorage.removeItem("phytosentryAdminUsername");
-    localStorage.removeItem("selectedScanId");
 
-    window.location.href = "login.html";
+confirmLogout.addEventListener("click", () => {
+
+    localStorage.removeItem(
+        "phytosentryAdminUsername"
+    );
+
+    localStorage.removeItem(
+        "selectedScanId"
+    );
+
+    window.location.href =
+        "login.html";
+
 });
 
 
@@ -115,265 +145,254 @@ confirmLogout.addEventListener("click", () => {
 // LOAD SELECTED SCAN
 // =========================================
 
-function loadScanDetails() {
+async function loadScanDetails() {
 
-    const selectedScanId =
-        localStorage.getItem("selectedScanId");
+    try {
 
+        // -----------------------------------------
+        // GET SELECTED SCAN ID
+        // -----------------------------------------
 
-    // If no scan ID was selected,
-    // keep the default sample data.
-
-    if (!selectedScanId) {
-
-        return;
-
-    }
+        const selectedScanId =
+            localStorage.getItem(
+                "selectedScanId"
+            );
 
 
-    // =========================================
-    // SAMPLE SCAN RECORDS
-    // =========================================
+        if (!selectedScanId) {
 
-    const scanRecords = {
+            console.error(
+                "No scan was selected."
+            );
 
-        "SCAN-000124": {
-
-            scanId:
-                "SCAN-000124",
-
-            date:
-                "May 18, 2025 10:24 AM",
-
-            status:
-                "Completed",
-
-            disease:
-                "Coffee Leaf Rust",
-
-            confidence:
-                "92.4%",
-
-            severity:
-                "High",
-
-            farmerName:
-                "Juan Dela Cruz",
-
-            farmName:
-                "PhytoSentry Farm"
-
-        },
-
-
-        "SCAN-000123": {
-
-            scanId:
-                "SCAN-000123",
-
-            date:
-                "May 18, 2025 09:15 AM",
-
-            status:
-                "Completed",
-
-            disease:
-                "Cercospora Leaf Spot",
-
-            confidence:
-                "89.1%",
-
-            severity:
-                "High",
-
-            farmerName:
-                "Maria Santos",
-
-            farmName:
-                "Santos Coffee Farm"
-
-        },
-
-
-        "SCAN-000122": {
-
-            scanId:
-                "SCAN-000122",
-
-            date:
-                "May 17, 2025 04:42 PM",
-
-            status:
-                "Completed",
-
-            disease:
-                "Coffee Berry Disease",
-
-            confidence:
-                "87.7%",
-
-            severity:
-                "Medium",
-
-            farmerName:
-                "Pedro Reyes",
-
-            farmName:
-                "Reyes Coffee Farm"
-
-        },
-
-
-        "SCAN-000121": {
-
-            scanId:
-                "SCAN-000121",
-
-            date:
-                "May 17, 2025 03:11 PM",
-
-            status:
-                "Completed",
-
-            disease:
-                "Healthy",
-
-            confidence:
-                "98.6%",
-
-            severity:
-                "Low",
-
-            farmerName:
-                "Ana Garcia",
-
-            farmName:
-                "Garcia Coffee Farm"
-
-        },
-
-
-        "SCAN-000120": {
-
-            scanId:
-                "SCAN-000120",
-
-            date:
-                "May 17, 2025 11:08 AM",
-
-            status:
-                "Completed",
-
-            disease:
-                "Coffee Leaf Rust",
-
-            confidence:
-                "91.3%",
-
-            severity:
-                "High",
-
-            farmerName:
-                "Carlos Cruz",
-
-            farmName:
-                "Cruz Coffee Farm"
+            return;
 
         }
 
-    };
+
+        console.log(
+            "Loading scan:",
+            selectedScanId
+        );
 
 
-    // =========================================
-    // GET SELECTED RECORD
-    // =========================================
+        // -----------------------------------------
+        // GET DOCUMENT FROM FIRESTORE
+        // -----------------------------------------
 
-    const record =
-        scanRecords[selectedScanId];
+        const scanReference =
+            doc(
+                db,
+                "scanHistory",
+                selectedScanId
+            );
 
 
-    // If selected ID is not found,
-    // only display the selected scan ID.
+        const scanSnapshot =
+            await getDoc(
+                scanReference
+            );
 
-    if (!record) {
+
+        // -----------------------------------------
+        // CHECK IF SCAN EXISTS
+        // -----------------------------------------
+
+        if (!scanSnapshot.exists()) {
+
+            console.error(
+                "Scan not found in Firebase:",
+                selectedScanId
+            );
+
+            scanId.textContent =
+                selectedScanId;
+
+            return;
+
+        }
+
+
+        // -----------------------------------------
+        // GET FIREBASE DATA
+        // -----------------------------------------
+
+        const data =
+            scanSnapshot.data();
+
+
+        console.log(
+            "Selected scan data:",
+            data
+        );
+
+
+        // =========================================
+        // SCAN INFORMATION
+        // =========================================
+
+        const actualScanId =
+            data.id ||
+            scanSnapshot.id;
+
+
+        const capturedDate =
+            data.capturedDate ||
+            "—";
+
+
+        const capturedTime =
+            data.capturedTime ||
+            "";
+
+
+        const status =
+            data.status ||
+            "Completed";
+
 
         scanId.textContent =
-            selectedScanId;
-
-        return;
-
-    }
+            actualScanId;
 
 
-    // =========================================
-    // DISPLAY RECORD
-    // =========================================
-
-    scanId.textContent =
-        record.scanId;
+        scanDate.textContent =
+            `${capturedDate} ${capturedTime}`;
 
 
-    scanDate.textContent =
-        record.date;
+        scanStatus.textContent =
+            status;
 
 
-    scanStatus.textContent =
-        record.status;
+        // =========================================
+        // DETECTION RESULTS
+        // =========================================
+
+        const disease =
+            data.displayName ||
+            data.scientificName ||
+            data.prediction?.label ||
+            "Unknown";
 
 
-    diseaseDetected.textContent =
-        record.disease;
+        const confidenceValue =
+            Number(
+                data.prediction?.confidence ||
+                0
+            );
 
 
-    confidence.textContent =
-        record.confidence;
+        diseaseDetected.textContent =
+            disease;
 
 
-    severity.textContent =
-        record.severity;
+        confidence.textContent =
+            `${(
+                confidenceValue * 100
+            ).toFixed(1)}%`;
 
 
-    farmerName.textContent =
-        record.farmerName;
+        // =========================================
+        // SEVERITY
+        // =========================================
+
+        const actualSeverity =
+            data.severity ||
+            data.prediction?.severity ||
+            "—";
 
 
-    farmName.textContent =
-        record.farmName;
+        severity.textContent =
+            actualSeverity;
 
 
-    // =========================================
-    // UPDATE SEVERITY STYLE
-    // =========================================
-
-    severity.classList.remove(
-        "high",
-        "medium",
-        "low"
-    );
-
-
-    if (
-        record.severity.toLowerCase() === "high"
-    ) {
-
-        severity.classList.add(
-            "high"
-        );
-
-    }
-    else if (
-        record.severity.toLowerCase() === "medium"
-    ) {
-
-        severity.classList.add(
-            "medium"
-        );
-
-    }
-    else {
-
-        severity.classList.add(
+        severity.classList.remove(
+            "high",
+            "medium",
             "low"
+        );
+
+
+        if (
+            actualSeverity &&
+            actualSeverity.toLowerCase() === "high"
+        ) {
+
+            severity.classList.add(
+                "high"
+            );
+
+        }
+        else if (
+            actualSeverity &&
+            actualSeverity.toLowerCase() === "medium"
+        ) {
+
+            severity.classList.add(
+                "medium"
+            );
+
+        }
+        else if (
+            actualSeverity &&
+            actualSeverity.toLowerCase() === "low"
+        ) {
+
+            severity.classList.add(
+                "low"
+            );
+
+        }
+
+
+        // =========================================
+        // FARM DETAILS
+        // =========================================
+
+        const firstName =
+            data.firstName ||
+            "";
+
+
+        const lastName =
+            data.LastName ||
+            data.lastName ||
+            "";
+
+
+        const actualFarmerName =
+            `${firstName} ${lastName}`
+                .trim();
+
+
+        const actualFarmName =
+            data.farmName ||
+            data.FarmName ||
+            "—";
+
+
+        farmerName.textContent =
+            actualFarmerName || "—";
+
+
+        farmName.textContent =
+            actualFarmName;
+
+
+        // =========================================
+        // SUCCESS
+        // =========================================
+
+        console.log(
+            "Scan details loaded successfully!"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Error loading scan details:",
+            error
         );
 
     }

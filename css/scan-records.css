@@ -808,3 +808,69 @@ td:nth-child(8) {
         min-width: 0;
     }
 }
+/* =========================================
+   DOWNLOAD MODAL
+========================================= */
+
+.download-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.download-modal.show {
+    display: flex;
+}
+
+.download-modal-content {
+    width: 400px;
+    max-width: 90%;
+
+    padding: 30px;
+
+    background: white;
+    border-radius: 15px;
+
+    text-align: center;
+
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.download-modal-content h2 {
+    margin-top: 0;
+}
+
+.download-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    margin-top: 25px;
+}
+
+.download-option,
+.cancel-download {
+    width: 100%;
+    padding: 12px;
+
+    border: none;
+    border-radius: 8px;
+
+    cursor: pointer;
+}
+
+.download-option {
+    background: #4f8f45;
+    color: white;
+}
+
+.cancel-download {
+    background: #e5e5e5;
+    color: #333;
+}

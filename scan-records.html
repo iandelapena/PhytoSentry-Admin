@@ -232,10 +232,56 @@
         </div>
     </div>
     
-    <script
-        type="module"
-        src="js/scan-records.js"
-    ></script>
+    <!-- DOWNLOAD REPORT MODAL -->
+<div class="download-modal" id="downloadModal">
+
+    <div class="download-modal-content">
+
+        <h2>Download Report</h2>
+
+        <p>
+            Choose the format you want to download.
+        </p>
+
+        <div class="download-modal-actions">
+
+            <button
+                class="download-option"
+                id="downloadCsv"
+                type="button"
+            >
+                Download CSV
+            </button>
+
+            <button
+                class="download-option"
+                id="downloadPdf"
+                type="button"
+            >
+                Download PDF
+            </button>
+
+            <button
+                class="cancel-download"
+                id="cancelDownload"
+                type="button"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.3/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/5.0.8/jspdf.plugin.autotable.min.js"></script>
+
+<script
+    type="module"
+    src="js/scan-records.js"
+></script>
 
 </body>
 
