@@ -604,9 +604,11 @@ downloadPdf.addEventListener("click", () => {
                     cells[4].textContent.trim(),
 
                 confidence:
-                    parseFloat(
-                        cells[5].textContent
-                    ) || 0,
+                parseFloat(
+                    cells[5].textContent
+                        .replace("%", "")
+                        .trim()
+                ) || 0,
 
                 dateTime:
                     cells[6].textContent.trim(),
@@ -807,245 +809,216 @@ downloadPdf.addEventListener("click", () => {
 
 
     // =====================================
-    // DISEASE DISTRIBUTION
-    // =====================================
+// DISEASE DISTRIBUTION
+// =====================================
 
-    doc.setFontSize(12);
+doc.setFontSize(11);
 
-    doc.text(
-        "Disease Distribution",
-        14,
-        96
+doc.text(
+    "Disease Distribution",
+    14,
+    88
+);
+
+const diseaseEntries =
+    Object.entries(diseaseCounts);
+
+const chartX = 20;
+const chartY = 94;
+const chartWidth = 250;
+const chartHeight = 38;
+
+const maxDiseaseCount =
+    Math.max(
+        ...diseaseEntries.map(
+            ([, count]) => count
+        ),
+        1
     );
 
+// Chart border
+doc.rect(
+    chartX,
+    chartY,
+    chartWidth,
+    chartHeight
+);
 
-    const diseaseEntries =
-        Object.entries(diseaseCounts);
+diseaseEntries.forEach(
+    ([disease, count], index) => {
 
+        const availableWidth =
+            chartWidth - 30;
 
-    const chartX = 20;
+        const slotWidth =
+            availableWidth /
+            diseaseEntries.length;
 
-    const chartY = 104;
+        const barWidth =
+            Math.min(
+                20,
+                slotWidth - 8
+            );
 
-    const chartWidth = 240;
+        const x =
+            chartX +
+            15 +
+            index * slotWidth;
 
-    const chartHeight = 55;
+        const barHeight =
+            (count / maxDiseaseCount) * 24;
 
+        const y =
+            chartY +
+            chartHeight -
+            10 -
+            barHeight;
 
-    const maxDiseaseCount =
-        Math.max(
-            ...diseaseEntries.map(
-                ([, count]) => count
-            ),
-            1
+        // Bar
+        doc.rect(
+            x,
+            y,
+            barWidth,
+            barHeight,
+            "F"
         );
 
+        // Count
+        doc.setFontSize(7);
 
-    // Chart border
-
-    doc.rect(
-        chartX,
-        chartY,
-        chartWidth,
-        chartHeight
-    );
-
-
-    diseaseEntries.forEach(
-        ([disease, count], index) => {
-
-            const barHeight =
-                (count / maxDiseaseCount) *
-                35;
-
-
-            const x =
-                chartX +
-                10 +
-                index *
-                (
-                    (chartWidth - 20) /
-                    diseaseEntries.length
-                );
-
-
-            const barWidth =
-                Math.min(
-                    25,
-                    (
-                        chartWidth - 30
-                    ) /
-                    diseaseEntries.length
-                );
-
-
-            const y =
-                chartY +
-                chartHeight -
-                12 -
-                barHeight;
-
-
-            // Bar
-
-            doc.rect(
-                x,
-                y,
-                barWidth,
-                barHeight,
-                "F"
-            );
-
-
-            // Count
-
-            doc.setFontSize(8);
-
-            doc.text(
-                String(count),
-                x + barWidth / 2,
-                y - 2,
-                {
-                    align: "center"
-                }
-            );
-
-
-            // Disease label
-
-            const shortName =
-                disease.length > 14
-                    ? disease.substring(0, 14) + "..."
-                    : disease;
-
-
-            doc.text(
-                shortName,
-                x + barWidth / 2,
-                chartY + chartHeight - 4,
-                {
-                    align: "center"
-                }
-            );
-
-        }
-    );
-
-
-    // =====================================
-    // CONFIDENCE DISTRIBUTION
-    // =====================================
-
-    doc.setFontSize(12);
-
-    doc.text(
-        "Confidence Distribution",
-        14,
-        175
-    );
-
-
-    const confidenceEntries =
-        Object.entries(
-            confidenceGroups
+        doc.text(
+            String(count),
+            x + barWidth / 2,
+            y - 2,
+            {
+                align: "center"
+            }
         );
 
+        // Disease label
+        const shortName =
+            disease.length > 12
+                ? disease.substring(0, 12) + "..."
+                : disease;
 
-    const confidenceChartX = 20;
+        doc.setFontSize(6);
 
-    const confidenceChartY = 183;
-
-    const confidenceChartWidth = 240;
-
-    const confidenceChartHeight = 55;
-
-
-    const maxConfidenceCount =
-        Math.max(
-            ...confidenceEntries.map(
-                ([, count]) => count
-            ),
-            1
+        doc.text(
+            shortName,
+            x + barWidth / 2,
+            chartY + chartHeight - 3,
+            {
+                align: "center"
+            }
         );
 
+    }
+);
 
-    doc.rect(
-        confidenceChartX,
-        confidenceChartY,
-        confidenceChartWidth,
-        confidenceChartHeight
+
+// =====================================
+// CONFIDENCE DISTRIBUTION
+// =====================================
+
+doc.setFontSize(11);
+
+doc.text(
+    "Confidence Distribution",
+    14,
+    143
+);
+
+const confidenceEntries =
+    Object.entries(
+        confidenceGroups
     );
 
+const confidenceChartX = 20;
+const confidenceChartY = 149;
+const confidenceChartWidth = 250;
+const confidenceChartHeight = 38;
 
-    confidenceEntries.forEach(
-        ([label, count], index) => {
-
-            const barHeight =
-                (count / maxConfidenceCount) *
-                35;
-
-
-            const x =
-                confidenceChartX +
-                12 +
-                index *
-                42;
-
-
-            const barWidth =
-                24;
-
-
-            const y =
-                confidenceChartY +
-                confidenceChartHeight -
-                12 -
-                barHeight;
-
-
-            // Bar
-
-            doc.rect(
-                x,
-                y,
-                barWidth,
-                barHeight,
-                "F"
-            );
-
-
-            // Count
-
-            doc.setFontSize(8);
-
-            doc.text(
-                String(count),
-                x + barWidth / 2,
-                y - 2,
-                {
-                    align: "center"
-                }
-            );
-
-
-            // Label
-
-            doc.setFontSize(7);
-
-            doc.text(
-                label,
-                x + barWidth / 2,
-                confidenceChartY +
-                confidenceChartHeight -
-                4,
-                {
-                    align: "center"
-                }
-            );
-
-        }
+const maxConfidenceCount =
+    Math.max(
+        ...confidenceEntries.map(
+            ([, count]) => count
+        ),
+        1
     );
 
+doc.rect(
+    confidenceChartX,
+    confidenceChartY,
+    confidenceChartWidth,
+    confidenceChartHeight
+);
+
+confidenceEntries.forEach(
+    ([label, count], index) => {
+
+        const slotWidth =
+            (
+                confidenceChartWidth - 30
+            ) /
+            confidenceEntries.length;
+
+        const barWidth =
+            Math.min(
+                20,
+                slotWidth - 8
+            );
+
+        const x =
+            confidenceChartX +
+            15 +
+            index * slotWidth;
+
+        const barHeight =
+            (count / maxConfidenceCount) * 24;
+
+        const y =
+            confidenceChartY +
+            confidenceChartHeight -
+            10 -
+            barHeight;
+
+        // Bar
+        doc.rect(
+            x,
+            y,
+            barWidth,
+            barHeight,
+            "F"
+        );
+
+        // Count
+        doc.setFontSize(7);
+
+        doc.text(
+            String(count),
+            x + barWidth / 2,
+            y - 2,
+            {
+                align: "center"
+            }
+        );
+
+        // Label
+        doc.setFontSize(6);
+
+        doc.text(
+            label,
+            x + barWidth / 2,
+            confidenceChartY +
+            confidenceChartHeight -
+            3,
+            {
+                align: "center"
+            }
+        );
+
+    }
+);
 
     // =====================================
     // PAGE 2 — DETAILED RECORDS
