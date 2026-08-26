@@ -365,10 +365,8 @@ async function loadScanDetails() {
 
 
         const actualFarmLocation =
-            data.farmLocation ||
-            data.FarmLocation ||
-            "—";
-
+        data.locationName ||
+        "—";
 
         farmerName.textContent =
             actualFarmerName || "—";

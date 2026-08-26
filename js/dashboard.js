@@ -212,6 +212,7 @@ function buildTopActiveFarms(records) {
 
     records.forEach((record) => {
         const farmLocation = (record.farmLocation || record.FarmLocation || "Unknown Farm").trim() || "Unknown Farm";
+         "Unknown Farm";
         farmCounts[farmLocation] = (farmCounts[farmLocation] || 0) + 1;
     });
 
@@ -592,9 +593,9 @@ async function loadDashboardData() {
             // ---------------------------------
 
             const farmLocation =
-                data.farmLocation ||
-                data.FarmLocation ||
-                "";
+            data.locationName ||
+            "";
+
 
 
             if (farmLocation) {
@@ -744,9 +745,8 @@ scansSnapshot.forEach((doc) => {
         // -----------------------------
 
         const farmLocation =
-            data.farmLocation ||
-            data.FarmLocation ||
-            "";
+        data.locationName ||
+        "";
 
 
         if (farmLocation) {
@@ -843,9 +843,9 @@ farmsChange.textContent =
 
 
             const farmLocation =
-                data.farmLocation ||
-                data.FarmLocation ||
-                "—";
+            data.locationName ||
+            "—";
+
 
 
             const scanId =
