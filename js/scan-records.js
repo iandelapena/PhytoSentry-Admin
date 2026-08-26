@@ -189,8 +189,8 @@ function filterRecords() {
                 .toLowerCase();
 
 
-        const farmName =
-            (row.dataset.farmName || "")
+        const farmLocation =
+            (row.dataset.farmLocation || "")
                 .toLowerCase();
 
 
@@ -235,7 +235,7 @@ function filterRecords() {
 
             fullName.includes(searchValue) ||
 
-            farmName.includes(searchValue) ||
+            farmLocation.includes(searchValue) ||
 
             scanId.includes(searchValue) ||
 
@@ -384,7 +384,7 @@ downloadCsv.addEventListener("click", () => {
 
 
     let csv =
-        "First Name,Last Name,Farm Name,Scan ID,Disease Detected,Confidence %,Date/Time,Status\n";
+        "First Name,Last Name,Farm Location,Scan ID,Disease Detected,Confidence %,Date/Time,Status\n";
 
 
     rows.forEach((row) => {
@@ -399,7 +399,7 @@ downloadCsv.addEventListener("click", () => {
         const lastName =
             cells[1].textContent.trim();
 
-        const farmName =
+        const farmLocation =
             cells[2].textContent.trim();
 
         const scanId =
@@ -419,7 +419,7 @@ downloadCsv.addEventListener("click", () => {
 
 
         csv +=
-            `"${firstName}","${lastName}","${farmName}","${scanId}","${disease}","${confidence}","${dateTime}","${status}"\n`;
+            `"${firstName}","${lastName}","${farmLocation}","${scanId}","${disease}","${confidence}","${dateTime}","${status}"\n`;
 
     });
 
@@ -594,7 +594,7 @@ downloadPdf.addEventListener("click", () => {
                 lastName:
                     cells[1].textContent.trim(),
 
-                farmName:
+                farmLocation:
                     cells[2].textContent.trim(),
 
                 scanId:
@@ -1058,7 +1058,7 @@ confidenceEntries.forEach(
 
                 record.lastName,
 
-                record.farmName,
+                record.farmLocation,
 
                 record.scanId,
 
@@ -1089,7 +1089,7 @@ confidenceEntries.forEach(
 
             "Last Name",
 
-            "Farm Name",
+            "Farm Location",
 
             "Scan ID",
 
@@ -1234,9 +1234,8 @@ async function loadScanRecords() {
                 data.lastName ||
                 "—";
 
-            const farmName =
-            data.farmName ||
-            data.FarmName ||
+            const farmLocation =
+            data.locationName ||
             "—";
 
             const scanId =
@@ -1293,8 +1292,8 @@ async function loadScanRecords() {
             row.dataset.scanId =
                 scanId;
             
-            row.dataset.farmName =
-                farmName;
+            row.dataset.farmLocation =
+                farmLocation;
 
             row.dataset.disease =
                 disease;
@@ -1327,7 +1326,7 @@ async function loadScanRecords() {
                 </td>
 
                 <td>
-                    ${farmName}
+                    ${farmLocation}
                 </td>
 
                 <td>

@@ -211,8 +211,8 @@ function buildTopActiveFarms(records) {
     const farmCounts = {};
 
     records.forEach((record) => {
-        const farmName = (record.farmName || record.FarmName || "Unknown Farm").trim() || "Unknown Farm";
-        farmCounts[farmName] = (farmCounts[farmName] || 0) + 1;
+        const farmLocation = (record.farmLocation || record.FarmLocation || "Unknown Farm").trim() || "Unknown Farm";
+        farmCounts[farmLocation] = (farmCounts[farmLocation] || 0) + 1;
     });
 
     const sortedFarms = Object.entries(farmCounts)
@@ -220,7 +220,7 @@ function buildTopActiveFarms(records) {
         .slice(0, 5);
 
     return {
-        labels: sortedFarms.map(([farmName]) => farmName),
+        labels: sortedFarms.map(([farmLocation]) => farmLocation),
         values: sortedFarms.map(([, count]) => count)
     };
 }
@@ -591,15 +591,15 @@ async function loadDashboardData() {
             // COUNT FARMS
             // ---------------------------------
 
-            const farmName =
-                data.farmName ||
-                data.FarmName ||
+            const farmLocation =
+                data.farmLocation ||
+                data.FarmLocation ||
                 "";
 
 
-            if (farmName) {
+            if (farmLocation) {
 
-                farms.add(farmName);
+                farms.add(farmLocation);
 
             }
 
@@ -743,16 +743,16 @@ scansSnapshot.forEach((doc) => {
         // FARM
         // -----------------------------
 
-        const farmName =
-            data.farmName ||
-            data.FarmName ||
+        const farmLocation =
+            data.farmLocation ||
+            data.FarmLocation ||
             "";
 
 
-        if (farmName) {
+        if (farmLocation) {
 
             weeklyFarms.add(
-                farmName
+                farmLocation
             );
 
         }
@@ -842,9 +842,9 @@ farmsChange.textContent =
                 "—";
 
 
-            const farmName =
-                data.farmName ||
-                data.FarmName ||
+            const farmLocation =
+                data.farmLocation ||
+                data.FarmLocation ||
                 "—";
 
 
@@ -905,7 +905,7 @@ farmsChange.textContent =
                 </td>
 
                 <td>
-                    ${farmName}
+                    ${farmLocation}
                 </td>
 
                 <td>

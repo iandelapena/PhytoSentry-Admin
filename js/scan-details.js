@@ -67,8 +67,8 @@ const severity =
 const farmerName =
     document.getElementById("farmerName");
 
-const farmName =
-    document.getElementById("farmName");
+const farmLocation =
+    document.getElementById("farmLocation");
 
 
 // =========================================
@@ -364,9 +364,9 @@ async function loadScanDetails() {
                 .trim();
 
 
-        const actualFarmName =
-            data.farmName ||
-            data.FarmName ||
+        const actualFarmLocation =
+            data.farmLocation ||
+            data.FarmLocation ||
             "—";
 
 
@@ -374,8 +374,8 @@ async function loadScanDetails() {
             actualFarmerName || "—";
 
 
-        farmName.textContent =
-            actualFarmName;
+        farmLocation.textContent =
+            actualFarmLocation;
 
 
         // =========================================
