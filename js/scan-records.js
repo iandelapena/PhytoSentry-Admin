@@ -48,6 +48,9 @@ const downloadButton =
 const downloadCsv =
     document.getElementById("downloadCsv");
 
+const downloadExcel =
+    document.getElementById("downloadExcel");
+
 const downloadPdf =
     document.getElementById("downloadPdf");
 
@@ -58,6 +61,9 @@ const recordsBody =
 
 const noResults =
     document.getElementById("noResults");
+
+const ExcelJS =
+    window.ExcelJS;
 
 
 // =========================================
@@ -462,6 +468,242 @@ downloadCsv.addEventListener("click", () => {
     // Close modal
 
     downloadModal.classList.remove("show");
+
+});
+
+// =========================================
+// DOWNLOAD EXCEL
+// =========================================
+
+function getVisibleRecordRows() {
+
+    return Array.from(
+        document.querySelectorAll(".record-row")
+    ).filter(row =>
+        row.style.display !== "none"
+    );
+
+}
+
+function blobToDataUrl(blob) {
+
+    return new Promise((resolve, reject) => {
+
+        const reader = new FileReader();
+
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+
+    });
+
+}
+
+async function fetchImageForExcel(imageUrl) {
+
+    if (!imageUrl) {
+
+        return null;
+
+    }
+
+    try {
+
+        const response =
+            await fetch(imageUrl);
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Image request failed with status ${response.status}`
+            );
+
+        }
+
+        const blob =
+            await response.blob();
+
+        const dataUrl =
+            await blobToDataUrl(blob);
+
+        const mimeType =
+            blob.type.toLowerCase();
+
+        const extension =
+            mimeType.includes("png")
+                ? "png"
+                : mimeType.includes("gif")
+                    ? "gif"
+                    : "jpeg";
+
+        return {
+            base64: dataUrl,
+            extension
+        };
+
+    }
+    catch (error) {
+
+        console.warn(
+            "Could not embed scan image in Excel export:",
+            error
+        );
+
+        return null;
+
+    }
+
+}
+
+downloadExcel.addEventListener("click", async () => {
+
+    const rows =
+        getVisibleRecordRows();
+
+    if (rows.length === 0) {
+
+        alert(
+            "There are no records to download."
+        );
+
+        return;
+
+    }
+
+    if (!ExcelJS) {
+
+        alert(
+            "Excel export library could not be loaded."
+        );
+
+        return;
+
+    }
+
+    downloadExcel.disabled = true;
+    downloadExcel.textContent = "Preparing Excel...";
+
+    try {
+
+        const workbook =
+            new ExcelJS.Workbook();
+
+        const worksheet =
+            workbook.addWorksheet("Scan Records");
+
+        worksheet.columns = [
+            { header: "Image", key: "image", width: 16 },
+            { header: "First Name", key: "firstName", width: 18 },
+            { header: "Last Name", key: "lastName", width: 18 },
+            { header: "Farm Location", key: "farmLocation", width: 24 },
+            { header: "Scan ID", key: "scanId", width: 18 },
+            { header: "Disease Detected", key: "disease", width: 24 },
+            { header: "Confidence %", key: "confidence", width: 16 },
+            { header: "Date/Time", key: "dateTime", width: 24 },
+            { header: "Status", key: "status", width: 16 }
+        ];
+
+        worksheet.getRow(1).font = {
+            bold: true,
+            color: { argb: "FFFFFFFF" }
+        };
+
+        worksheet.getRow(1).fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: "FF2F5D50" }
+        };
+
+        for (const row of rows) {
+
+            const cells =
+                row.querySelectorAll("td");
+
+            const excelRow =
+                worksheet.addRow({
+                    firstName: cells[0].textContent.trim(),
+                    lastName: cells[1].textContent.trim(),
+                    farmLocation: cells[2].textContent.trim(),
+                    scanId: cells[3].textContent.trim(),
+                    disease: cells[4].textContent.trim(),
+                    confidence: cells[5].textContent.trim(),
+                    dateTime: cells[6].textContent.trim(),
+                    status: cells[7].textContent.trim()
+                });
+
+            excelRow.height = 72;
+
+            const image =
+                await fetchImageForExcel(
+                    row.dataset.imageUrl
+                );
+
+            if (image) {
+
+                const imageId =
+                    workbook.addImage(image);
+
+                worksheet.addImage(
+                    imageId,
+                    {
+                        tl: { col: 0, row: excelRow.number - 1 },
+                        ext: { width: 92, height: 72 }
+                    }
+                );
+
+            }
+
+        }
+
+        worksheet.views = [
+            { state: "frozen", ySplit: 1 }
+        ];
+
+        const buffer =
+            await workbook.xlsx.writeBuffer();
+
+        const blob =
+            new Blob(
+                [buffer],
+                {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                }
+            );
+
+        const url =
+            URL.createObjectURL(blob);
+
+        const link =
+            document.createElement("a");
+
+        link.href = url;
+        link.download = "phytosentry-scan-records.xlsx";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        downloadModal.classList.remove("show");
+
+    }
+    catch (error) {
+
+        console.error(
+            "Excel export failed:",
+            error
+        );
+
+        alert(
+            "The Excel report could not be created."
+        );
+
+    }
+    finally {
+
+        downloadExcel.disabled = false;
+        downloadExcel.textContent = "Download Excel";
+
+    }
 
 });
 
@@ -1297,6 +1539,15 @@ async function loadScanRecords() {
 
             row.dataset.disease =
                 disease;
+
+            row.dataset.imageUrl =
+                data.imageUrl ||
+                data.imageUri ||
+                "";
+
+            row.dataset.status =
+                data.status ||
+                "Completed";
 
             row.dataset.confidence =
                 confidence;

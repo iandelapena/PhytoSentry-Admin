@@ -10,7 +10,7 @@ The system allows administrators to:
 * View recent scan records
 * Search and filter scan records
 * View detailed information about a scan
-* Download scan records as a CSV report
+* Download scan records as CSV, PDF, or Excel reports with embedded image thumbnails
 * Navigate between the dashboard and scan records
 * Log out of the admin dashboard
 
@@ -21,7 +21,7 @@ The system allows administrators to:
 3. From the dashboard, view the summary statistics and recent scans.
 4. Click a scan record to view its detailed information.
 5. Go to **Scan Records** to search or filter records.
-6. Click **Download Report** to export the displayed records as a CSV file.
+6. Click **Download Report** to export the displayed records as a CSV, PDF, or Excel report. Excel exports include scan image thumbnails when the Firestore document has an `imageUrl`.
 7. Click **Logout** to return to the login page.
 
 ## Technologies Used
