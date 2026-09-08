@@ -45,6 +45,9 @@ const scanDate =
 const scanStatus =
     document.getElementById("scanStatus");
 
+const scanImage =
+    document.getElementById("scanImage");
+
 
 // =========================================
 // DETECTION INFORMATION
@@ -149,6 +152,10 @@ async function loadScanDetails() {
 
     try {
 
+    scanImage.removeAttribute("src");
+    scanImage.hidden = false;
+    scanImage.alt = "Scan image is loading";
+
         // -----------------------------------------
         // GET SELECTED SCAN ID
         // -----------------------------------------
@@ -219,6 +226,30 @@ async function loadScanDetails() {
 
         const data =
             scanSnapshot.data();
+
+        const imageUrl =
+            data.imageUrl ||
+            data.imageUri;
+
+        scanImage.onerror = () => {
+
+            scanImage.hidden = true;
+            scanImage.alt = "Scan image unavailable";
+
+        };
+
+        if (typeof imageUrl === "string" && imageUrl.trim()) {
+
+            scanImage.src = imageUrl.trim();
+            scanImage.alt = "Coffee plant scan";
+
+        }
+        else {
+
+            scanImage.hidden = true;
+            scanImage.alt = "Scan image unavailable";
+
+        }
 
 
         console.log(
