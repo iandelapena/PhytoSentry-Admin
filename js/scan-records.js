@@ -592,16 +592,28 @@ downloadExcel.addEventListener("click", async () => {
             workbook.addWorksheet("Scan Records");
 
         worksheet.columns = [
-            { header: "Image", key: "image", width: 16 },
-            { header: "First Name", key: "firstName", width: 18 },
-            { header: "Last Name", key: "lastName", width: 18 },
-            { header: "Farm Location", key: "farmLocation", width: 24 },
-            { header: "Scan ID", key: "scanId", width: 18 },
-            { header: "Disease Detected", key: "disease", width: 24 },
-            { header: "Confidence %", key: "confidence", width: 16 },
-            { header: "Date/Time", key: "dateTime", width: 24 },
-            { header: "Status", key: "status", width: 16 }
+            { key: "image", width: 16 },
+            { key: "firstName", width: 18 },
+            { key: "lastName", width: 18 },
+            { key: "farmLocation", width: 24 },
+            { key: "scanId", width: 18 },
+            { key: "disease", width: 24 },
+            { key: "confidence", width: 16 },
+            { key: "dateTime", width: 24 },
+            { key: "status", width: 16 }
         ];
+
+        worksheet.addRow([
+            "Image",
+            "First Name",
+            "Last Name",
+            "Farm Location",
+            "Scan ID",
+            "Disease Detected",
+            "Confidence %",
+            "Date/Time",
+            "Status"
+        ]);
 
         worksheet.getRow(1).font = {
             bold: true,
@@ -1424,6 +1436,21 @@ confidenceEntries.forEach(
 // FIREBASE - LOAD SCAN RECORDS
 // =========================================
 
+function getRecordTimestamp(data) {
+
+    const timestamp =
+        data.capturedAt ||
+        `${data.capturedDate || ""} ${data.capturedTime || ""}`.trim();
+
+    const parsedTimestamp =
+        Date.parse(timestamp);
+
+    return Number.isNaN(parsedTimestamp)
+        ? 0
+        : parsedTimestamp;
+
+}
+
 async function loadScanRecords() {
 
     try {
@@ -1452,7 +1479,14 @@ async function loadScanRecords() {
         // CREATE TABLE ROWS
         // =====================================
 
-        snapshot.forEach((doc) => {
+        const sortedDocs =
+            [...snapshot.docs]
+                .sort((leftDoc, rightDoc) =>
+                    getRecordTimestamp(rightDoc.data()) -
+                    getRecordTimestamp(leftDoc.data())
+                );
+
+        sortedDocs.forEach((doc) => {
 
             const data = doc.data();
 

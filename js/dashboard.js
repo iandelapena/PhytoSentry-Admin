@@ -211,8 +211,7 @@ function buildTopActiveFarms(records) {
     const farmCounts = {};
 
     records.forEach((record) => {
-        const farmLocation = (record.farmLocation || record.FarmLocation || "Unknown Farm").trim() || "Unknown Farm";
-         "Unknown Farm";
+        const farmLocation = (record.locationName || "").trim() || "Unknown Farm";
         farmCounts[farmLocation] = (farmCounts[farmLocation] || 0) + 1;
     });
 
